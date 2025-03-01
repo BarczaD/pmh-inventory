@@ -2,7 +2,11 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use Yii;
+use yii\db\ActiveRecord;
+use yii\db\Connection;
+
+class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
     public $id;
     public $username;
@@ -58,6 +62,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
+        //TODO: change it to work with sqlite3
         foreach (self::$users as $user) {
             if (strcasecmp($user['username'], $username) === 0) {
                 return new static($user);
@@ -65,6 +70,19 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         }
 
         return null;
+    }
+
+    public static function registerUser(User $user)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user->password = Yii::$app->getSecurity()->generatePasswordHash($user->password);
+            $user->save();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            echo "gatya:\n" . $e->getMessage();
+        }
+
     }
 
     /**
