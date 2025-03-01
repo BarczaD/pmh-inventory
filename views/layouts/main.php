@@ -42,6 +42,15 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 !Yii::$app->user->isGuest
                 ? ['label' => 'Home', 'url' => ['/site/index']]
                 : "",
+            !Yii::$app->user->isGuest
+                ? ['label' => 'Regisztráció', 'url' => ['/site/register']]
+                : "",
+            !Yii::$app->user->isGuest
+                ? ['label' => 'Kollégák', 'url' => ['/site/colleagues']]
+                : "",
+            !Yii::$app->user->isGuest
+                ? ['label' => 'Munkaállomások', 'url' => ['/site/workstations']]
+                : "",
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
                 : '<li class="nav-item">'
@@ -71,7 +80,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
         <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">Hódmezővásárhely MJV Polgáramesteri Hivatala, <?= date('Y') ?></div>
+            <div class="col-md-6 text-center text-md-start">Hódmezővásárhely MJV Polgármesteri Hivatala, <?= date('Y') ?></div>
         </div>
     </div>
 </footer>
