@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'David\'s Awesome Inventory System ',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
