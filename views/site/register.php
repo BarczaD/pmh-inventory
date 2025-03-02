@@ -17,7 +17,7 @@ $this->title = 'Regisztráció';
         <div class="col-lg-5">
 
             <?php $form = ActiveForm::begin([
-                'id' => 'login-form',
+                'id' => 'register-form',
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
                     'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
@@ -32,7 +32,7 @@ $this->title = 'Regisztráció';
 
             <div class="form-group">
                 <div>
-                    <?= Html::submitButton('Regisztráció', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('Regisztráció', ['class' => 'btn btn-primary', 'name' => 'register-button']) ?>
                 </div>
             </div>
 
