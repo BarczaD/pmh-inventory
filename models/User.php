@@ -1,8 +1,11 @@
 <?php
 
 namespace app\models;
+use Yii;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use yii\db\ActiveRecord;
+
+class User extends ActiveRecord
 {
     public $id;
     public $username;
@@ -100,5 +103,28 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return $this->password === $password;
+    }
+
+    /**
+     * @return bool
+     *
+     *
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
+     */
+    public function registerUser()
+    {
+        $transaction = Yii::$app->db->getTransaction();
+        $transaction->begin();
+        try {
+            $this->authKey = Yii::$app->security->generateRandomString();
+            $this->save();
+            $transaction->commit();
+            return true;
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return false;
+        }
     }
 }
