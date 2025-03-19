@@ -1,8 +1,8 @@
-<?php
+    <?php
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'sqlite:database/database.db',
+    'dsn' => 'sqlite:' . dirname(__DIR__) . '../database/database.db',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

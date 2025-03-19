@@ -16,8 +16,8 @@ class m250317_193817_create_user_table extends Migration
             'id' => $this->primaryKey(),
             'username' => $this->string()->notNull()->unique(),
             'password' => $this->string()->notNull(),
-            'auth_key' => $this->string()->notNull(),
-            'access_token' => $this->string()->defaultValue(null)
+            'auth_key' => $this->string()->defaultValue(Yii::$app->security->generateRandomString()),
+            'access_token' => $this->string()->defaultValue(Yii::$app->security->generateRandomString()),
         ]);
     }
 

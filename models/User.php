@@ -1,18 +1,12 @@
 <?php
 
 namespace app\models;
-use Yii;
 
+use Yii;
 use yii\db\ActiveRecord;
 
-class User extends ActiveRecord
+class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
     private static $users = [
         '100' => [
             'id' => '100',
@@ -30,95 +24,61 @@ class User extends ActiveRecord
         ],
     ];
 
+    public static function tableName()
+    {
+        return '{{%user}}';
+    }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function rules()
+    {
+        return [
+            [['username', 'password'], 'required'],
+            [['username'], 'unique'],
+            [['auth_key', 'access_token'], 'string'],
+            [['password'], 'string', 'min' => 6],
+        ];
+    }
+
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return static::findOne(['id' => $id]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return static::findOne(['accessToken' => $token]);
     }
 
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return static::findOne(['username' => $username]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAuthKey()
     {
         return $this->authKey;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        return $this->getAuthKey() === $authKey;
     }
 
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 
-    /**
-     * @return bool
-     *
-     *
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\base\NotSupportedException
-     * @throws \yii\db\Exception
-     */
     public function registerUser()
     {
-        $transaction = Yii::$app->db->getTransaction();
-        $transaction->begin();
+        Yii::$app->db->open();
+        $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->authKey = Yii::$app->security->generateRandomString();
             $this->save();
             $transaction->commit();
             return true;

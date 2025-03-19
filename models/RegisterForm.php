@@ -4,10 +4,11 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\base\Model;
 
 /**
- * LoginForm is the model behind the login form.
+ * RegisterForm is the model behind the registration form.
  *
  * @property-read User|null $user
  *
@@ -16,6 +17,8 @@ class RegisterForm extends Model
 {
     public $username;
     public $password;
+
+    private $_user = false;
 
 
     /**
@@ -26,16 +29,21 @@ class RegisterForm extends Model
         return [
             // username and password are both required
             [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
         ];
     }
 
-    public function registerUser()
+    public function register()
     {
-        //TODO
+        if ($this->validate()) {
+            $this->_user = new User();
+            $this->_user->username = $this->username;
+            $this->_user->password = $this->password;
+            if ($this->_user->registerUser()) {
+                return true;
+            }
+        }
+        echo "gatya";
+        exit();
     }
 
     /**

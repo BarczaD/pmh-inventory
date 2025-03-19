@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\RegisterForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -72,7 +73,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->render('index');
         }
 
         $model = new LoginForm();
@@ -124,5 +125,19 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionRegister()
+    {
+        $model = new RegisterForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            return $this->render('index');
+        }
+
+        return $this->render('register', [
+            'model' => $model,
+        ]);
+
     }
 }
