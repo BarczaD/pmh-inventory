@@ -1,0 +1,145 @@
+<?php
+
+namespace app\models;
+
+use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+
+class User extends ActiveRecord implements IdentityInterface
+{
+    private static $users = [
+        '100' => [
+            'id' => '100',
+            'username' => 'admin',
+            'password' => 'admin',
+            'authKey' => 'test100key',
+            'accessToken' => '100-token',
+        ],
+        '101' => [
+            'id' => '101',
+            'username' => 'demo',
+            'password' => 'demo',
+            'authKey' => 'test101key',
+            'accessToken' => '101-token',
+        ],
+    ];
+
+    public function rules()
+    {
+        return [
+            [['username', 'password', 'auth_key', 'access_token'], 'string', 'max' => 255],
+            [['username'], 'unique'],
+        ];
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentity($id)
+    {
+        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        foreach (self::$users as $user) {
+            if ($user['accessToken'] === $token) {
+                return new static($user);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+        foreach (self::$users as $user) {
+            if (strcasecmp($user['username'], $username) === 0) {
+                return new static($user);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->auth_key === $authKey;
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return $this->password === $password;
+    }
+
+
+    /**
+     * Signs the user up, registering them in the database
+     * @return bool
+     */
+    public function signup()
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $this->password = Yii::$app->security->generatePasswordHash($this->password);
+
+            $this->auth_key = Yii::$app->security->generateRandomString();
+            $this->access_token = Yii::$app->security->generateRandomString();
+
+            if (!$this->save(false)) {
+                throw new \Exception('Nem sikerült létrehozni a felhasználót.');
+            }
+
+            $transaction->commit();
+            return true;
+
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            Yii::error("Regisztráció sikertelen: " . $e->getMessage(), __METHOD__);
+
+            return false;
+        }
+    }
+
+}
