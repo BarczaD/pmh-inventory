@@ -54,7 +54,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                     . '</li>',
             Yii::$app->user->isGuest
                 ? ['label' => 'Regisztráció', 'url' => ['/site/signup']]
-                : null
+                : ['label' => '']
         ]
     ]);
     NavBar::end();
