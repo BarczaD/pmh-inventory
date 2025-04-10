@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\models\forms\ContactForm;
 use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
+use app\models\forms\Workstation;
+use app\models\forms\WorkstationForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -134,6 +136,18 @@ class SiteController extends Controller
             return $this->goBack();
         }
         return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionNewWorkstation()
+    {
+        $model = new WorkstationForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return $this->goHome();
+        }
+
+        return $this->render('new-workstation', [
             'model' => $model,
         ]);
     }

@@ -42,7 +42,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     if (Yii::$app->user->isGuest) {
         $navbarItems[] = ['label' => 'Bejelentkezés', 'url' => ['/site/login']];
     } else {
-        $navbarItems[] = ['label' => 'Új Munkaállomás', 'url' => ['/site/newWorkstation']];
+        $navbarItems[] = ['label' => 'Új Munkaállomás', 'url' => ['/site/new-workstation']];
         $navbarItems[] = ['label' => 'Regisztráció', 'url' => ['/site/signup']];
         $navbarItems[] = !Yii::$app->user->isGuest
                 ? '<li class="nav-item">'
