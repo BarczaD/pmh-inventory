@@ -40,45 +40,24 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     $navbarItems = [];
 
     if (Yii::$app->user->isGuest) {
-        $navbarItems = ['label' => 'Bejelentkezés', 'url' => ['/site/login']];
+        $navbarItems[] = ['label' => 'Bejelentkezés', 'url' => ['/site/login']];
     } else {
-        $navbarItems = [
-            ['label' => 'Regisztráció', 'url' => ['/site/signup']],
-                /*!Yii::$app->user->isGuest ?
-                '<li class="nav-item">'
+        $navbarItems[] = ['label' => 'Új Munkaállomás', 'url' => ['/site/newWorkstation']];
+        $navbarItems[] = ['label' => 'Regisztráció', 'url' => ['/site/signup']];
+        $navbarItems[] = !Yii::$app->user->isGuest
+                ? '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'])
                 . Html::submitButton(
-                    'Kijelentkezés (' . Yii::$app->user->identity->username . ')',
-                    [['class' => 'nav-link btn btn-link logout'], ['label' => '']]
+                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    ['class' => 'nav-link btn btn-link logout']
                 )
                 . Html::endForm()
                 . '</li>'
-            :   ['label' => '', 'url' => ['']]*/
-
-        ];
+                : null;
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => //$navbarItems
-
-            [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest
-                ? ['label' => 'Bejelentkezés', 'url' => ['/site/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>',
-            Yii::$app->user->isGuest
-                ? ['label' => 'Regisztráció', 'url' => ['/site/signup']]
-                : ['label' => '']
-        ]
+        'items' => $navbarItems
     ]);
     NavBar::end();
     ?>
