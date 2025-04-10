@@ -21,7 +21,7 @@ class Workstation extends ActiveRecord
             [['hostname', 'brand_id', 'cpu_id', 'ram', 'os'], 'required'],
             [['brand_id', 'cpu_id', 'colleague_id', 'office_id', 'monitor_id1', 'monitor_id2'], 'integer'],
             [['software_list', 'description'], 'string'],
-            [['ms_office_license'], 'boolean'],
+            [['ms_office_license'], 'string'],
             [['hostname', 'os'], 'string', 'max' => 255],
         ];
     }

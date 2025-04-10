@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29d4fc36-c6e9-40fa-b2ab-c125554b6897" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/models/Brand.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Colleague.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Cpu.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Maintenance.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Monitor.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Office.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/Workstation.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/forms/NewWorkstationForm.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/site/newWorkstation.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/SiteController.php" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/SiteController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/ContactForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/forms/ContactForm.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/LoginForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/forms/LoginForm.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/SignupForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/forms/SignupForm.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/models/ContactFormTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/models/ContactFormTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/unit/models/LoginFormTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/models/LoginFormTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layouts/main.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/main.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/site/contact.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/site/contact.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/site/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/site/login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/site/signup.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/site/signup.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Workstation.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/Workstation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/forms/WorkstationForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/forms/WorkstationForm.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +164,7 @@
       <workItem from="1744187238427" duration="11385000" />
       <workItem from="1744262218889" duration="2907000" />
       <workItem from="1744284631822" duration="937000" />
-      <workItem from="1744286356208" duration="2002000" />
+      <workItem from="1744286356208" duration="2313000" />
     </task>
     <servers />
   </component>
