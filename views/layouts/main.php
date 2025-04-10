@@ -36,9 +36,32 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'brandUrl' => Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
+
+    $navbarItems = [];
+
+    if (Yii::$app->user->isGuest) {
+        $navbarItems = ['label' => 'Bejelentkezés', 'url' => ['/site/login']];
+    } else {
+        $navbarItems = [
+            ['label' => 'Regisztráció', 'url' => ['/site/signup']],
+                /*!Yii::$app->user->isGuest ?
+                '<li class="nav-item">'
+                . Html::beginForm(['/site/logout'])
+                . Html::submitButton(
+                    'Kijelentkezés (' . Yii::$app->user->identity->username . ')',
+                    [['class' => 'nav-link btn btn-link logout'], ['label' => '']]
+                )
+                . Html::endForm()
+                . '</li>'
+            :   ['label' => '', 'url' => ['']]*/
+
+        ];
+    }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
-        'items' => [
+        'items' => //$navbarItems
+
+            [
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
