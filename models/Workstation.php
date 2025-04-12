@@ -1,5 +1,5 @@
 <?php
-namespace app\models\forms;
+namespace app\models;
 
 use app\models\Brand;
 use app\models\Colleague;

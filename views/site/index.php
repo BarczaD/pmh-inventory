@@ -2,6 +2,11 @@
 
 /** @var yii\web\View $this */
 
+use yii\helpers\Html;
+use app\widgets\ModularModal;
+
+echo ModularModal::widget();
+
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
@@ -48,6 +53,29 @@ $this->title = 'My Yii Application';
                 <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
             </div>
         </div>
+        <?php
+        echo Html::a('Add Office', ['office/create'], [
+            'class' => 'btn btn-primary',
+            'data-toggle' => 'universal-modal',
+        ]);
+        echo Html::a('Add CPU', ['cpu/create'], [
+            'class' => 'btn btn-primary',
+            'data-toggle' => 'universal-modal',
+        ]);
+        echo Html::a('Add Monitor', ['monitor/create'], [
+            'class' => 'btn btn-primary',
+            'data-toggle' => 'universal-modal',
+        ]);
+        echo Html::a('Add Brand', ['brand/create'], [
+            'class' => 'btn btn-primary',
+            'data-toggle' => 'universal-modal',
+        ]);
+        echo Html::a('Add Colleague', ['colleague/create'], [
+            'class' => 'btn btn-primary',
+            'data-toggle' => 'universal-modal',
+        ]);
+
+        ?>
 
     </div>
 </div>

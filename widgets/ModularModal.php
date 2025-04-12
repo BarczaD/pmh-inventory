@@ -10,7 +10,7 @@ class ModularModal extends Widget
 {
     public $id = 'universal-modal';
     public $size = Modal::SIZE_LARGE;
-    public $title = '<h4 class="modal-title">Loading...</h4>';
+    public $title = '<h4 class="modal-title">Hozzáadás</h4>';
     public $contentId = 'universal-modal-content';
 
     public function run()
@@ -44,7 +44,6 @@ $(document).on('click', '[data-toggle="universal-modal"]', function (e) {
     content.load(url);
 });
 
-// Handle AJAX form submit
 $(document).on('beforeSubmit', 'form#modal-form', function(e) {
     e.preventDefault();
     var form = $(this);
@@ -55,9 +54,9 @@ $(document).on('beforeSubmit', 'form#modal-form', function(e) {
         .done(function(response) {
             if (response === 'success') {
                 $('#{$this->id}').modal('hide');
-                location.reload(); // or trigger a PJAX reload
+                location.reload();
             } else {
-                $('#{$this->contentId}').html(response); // re-render form with errors
+                $('#{$this->contentId}').html(response);
             }
         })
         .fail(function() {
