@@ -59,10 +59,12 @@ echo \app\widgets\ModularModal::widget();
             </div>
         </div>
         <div class="col-lg-4 mb-3">
-            <?= $form->field($model, 'ram')->textInput()->label("RAM") ?>
-
-            <?= $form->field($model, 'os')->textInput(['maxlength' => true])->label("OS") ?>
-
+            <div class="form-group">
+                <?= $form->field($model, 'ram')->textInput()->label("RAM") ?>
+            </div>
+            <div class="form-group">
+                <?= $form->field($model, 'os')->textInput(['maxlength' => true])->label("OS") ?>
+            </div>
 
             <div class="form-group">
                 <label class="form-label" for="workstation-brand_id">Kolléga</label>
