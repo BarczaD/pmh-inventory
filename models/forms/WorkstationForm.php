@@ -10,15 +10,15 @@ use yii\base\Model;
 class WorkstationForm extends Model
 {
     public $hostname;
-    public $brand;
-    public Cpu $cpu;
+    public $brand_id;
+    public $cpu_id;
     public $ram;
     public $os;
-    public Colleague $colleague;
-    public $office;
-    public Monitor $monitor1;
-    public Monitor $monitor2;
-    public $msOfficeLicense;
-    public $softwareList;
+    public $colleague_id;
+    public $office_id;
+    public $monitor_id1;
+    public $monitor_id2;
+    public $ms_office_license;
+    public $software_list;
     public $description;
 }

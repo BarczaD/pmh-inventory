@@ -6,8 +6,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Workstation $model */
 
-$this->title = 'New Workstation';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Új Munkaállomás felvétele';
 ?>
 
 <div class="site-new-workstation">

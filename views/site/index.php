@@ -29,8 +29,6 @@ $this->title = 'My Yii Application';
                     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
                     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
             <div class="col-lg-4 mb-3">
                 <h2>Heading</h2>
@@ -39,8 +37,6 @@ $this->title = 'My Yii Application';
                     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
                     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2>Heading</h2>
@@ -49,28 +45,26 @@ $this->title = 'My Yii Application';
                     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
                     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
             </div>
         </div>
         <?php
-        echo Html::a('Add Office', ['office/create'], [
+        echo Html::a('Iroda hozzáadása gomb', ['office/create'], [
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
         ]);
-        echo Html::a('Add CPU', ['cpu/create'], [
+        echo Html::a('CPU hozzáadása gomb', ['cpu/create'], [
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
         ]);
-        echo Html::a('Add Monitor', ['monitor/create'], [
+        echo Html::a('Monitor hozzáadása gomb', ['monitor/create'], [
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
         ]);
-        echo Html::a('Add Brand', ['brand/create'], [
+        echo Html::a('Brand hozzáadása gomb', ['brand/create'], [
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
         ]);
-        echo Html::a('Add Colleague', ['colleague/create'], [
+        echo Html::a('Kolléga hozzáadása gomb', ['colleague/create'], [
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
         ]);

@@ -26,9 +26,9 @@ $this->title = 'Felhasználó regisztráció';
                 ],
             ]); ?>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label("Felhasználónév") ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'password')->passwordInput()->label("Jelszó") ?>
 
 
             <div class="form-group">
