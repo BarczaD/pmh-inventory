@@ -7,8 +7,9 @@ use app\models\Cpu;
 use app\models\Monitor;
 use app\models\Office;
 use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-class Workstation extends ActiveRecord
+class Workstation extends ActiveRecord implements IdentityInterface
 {
     public static function tableName()
     {
@@ -54,5 +55,30 @@ class Workstation extends ActiveRecord
     public function getBrand()
     {
         return $this->hasOne(Brand::class, ['id' => 'brand_id']);
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
     }
 }

@@ -47,7 +47,7 @@ echo \app\widgets\ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'cpu_id',
-                        ArrayHelper::map(Cpu::find()->all(), 'id', 'name'),
+                        ArrayHelper::map(Cpu::find()->all(), 'id', 'model'),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki a CPU-t...']
                     ) ?>
                     <?=

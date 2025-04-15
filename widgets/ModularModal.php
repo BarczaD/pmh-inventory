@@ -44,25 +44,26 @@ $(document).on('click', '[data-toggle="universal-modal"]', function (e) {
     content.load(url);
 });
 
-$(document).on('beforeSubmit', 'form#modal-form', function(e) {
+$(document).on('beforeSubmit', 'form#modal-form', function (e) {
     e.preventDefault();
     var form = $(this);
     if (form.data('submitted')) return false;
     form.data('submitted', true);
 
     $.post(form.attr('action'), form.serialize())
-        .done(function(response) {
+        .done(function (response) {
+            console.log('Server response:', response);
             if (response === 'success') {
-                $('#{$this->id}').modal('hide');
+                $('#universal-modal').modal('hide');
                 location.reload();
             } else {
-                $('#{$this->contentId}').html(response);
+                $('#universal-modal-content').html(response);
             }
         })
-        .fail(function() {
+        .fail(function () {
             alert('An error occurred. Please try again.');
         })
-        .always(function() {
+        .always(function () {
             form.data('submitted', false);
         });
 

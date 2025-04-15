@@ -14,6 +14,7 @@ class CpuController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return 'success';
+
         }
 
         return $this->renderAjax('_cpuForm', ['model' => $model]);

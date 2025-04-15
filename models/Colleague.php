@@ -3,8 +3,9 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-class Colleague extends ActiveRecord
+class Colleague extends ActiveRecord implements IdentityInterface
 {
     public static function tableName()
     {
@@ -18,5 +19,30 @@ class Colleague extends ActiveRecord
             [['archived'], 'boolean'],
             [['name', 'department', 'group'], 'string', 'max' => 255],
         ];
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
     }
 }

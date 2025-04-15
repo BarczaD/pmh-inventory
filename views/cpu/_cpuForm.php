@@ -13,7 +13,7 @@ use yii\helpers\Html;
 <?= $form->field($model, 'model')->textInput()->label('')->label('Modell') ?>
 
 <div class="form-group">
-    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <?= Html::submitButton('Beküld', ['class' => 'btn btn-success']) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
