@@ -42,21 +42,28 @@ echo \app\widgets\ModularModal::widget();
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="workstation-brand_id">CPU</label>
+                <label class="form-label" for="workstation-cpu_id">CPU</label>
                 <div class="d-flex align-items-center gap-2">
                     <?= Html::activeDropDownList(
                         $model,
                         'cpu_id',
-                        ArrayHelper::map(Cpu::find()->all(), 'id', 'model'),
+                        \yii\helpers\ArrayHelper::map(
+                            \app\models\Cpu::find()->all(),
+                            'id',
+                            function ($cpu) {
+                                return "{$cpu->brand} {$cpu->model}";
+                            }
+                        ),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki a CPU-t...']
                     ) ?>
-                    <?=
-                    Html::a('+', ['cpu/create'], [
+                    <?= Html::a('+', ['cpu/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
-                    ])?>
+                        'title' => 'Új CPU hozzáadása',
+                    ]) ?>
                 </div>
             </div>
+
         </div>
         <div class="col-lg-4 mb-3">
             <div class="form-group">
@@ -101,12 +108,18 @@ echo \app\widgets\ModularModal::widget();
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label" for="workstation-brand_id">1. Monitor</label>
+                <label class="form-label" for="workstation-monitor_id1">1. Monitor</label>
                 <div class="d-flex align-items-center gap-2">
                     <?= Html::activeDropDownList(
                         $model,
                         'monitor_id1',
-                        ArrayHelper::map(Monitor::find()->all(), 'id', 'model'),
+                        \yii\helpers\ArrayHelper::map(
+                            \app\models\Monitor::find()->all(),
+                            'id',
+                            function ($monitor) {
+                                return "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})";
+                            }
+                        ),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki a Monitort...']
                     ) ?>
                     <?= Html::a('+', ['monitor/create'], [
@@ -117,13 +130,20 @@ echo \app\widgets\ModularModal::widget();
                 </div>
             </div>
 
+
             <div class="form-group">
-                <label class="form-label" for="workstation-brand_id">2. Monitor</label>
+                <label class="form-label" for="workstation-monitor_id1">1. Monitor</label>
                 <div class="d-flex align-items-center gap-2">
                     <?= Html::activeDropDownList(
                         $model,
                         'monitor_id2',
-                        ArrayHelper::map(Monitor::find()->all(), 'id', 'model'),
+                        \yii\helpers\ArrayHelper::map(
+                            \app\models\Monitor::find()->all(),
+                            'id',
+                            function ($monitor) {
+                                return "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})";
+                            }
+                        ),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki a Monitort...']
                     ) ?>
                     <?= Html::a('+', ['monitor/create'], [
@@ -133,7 +153,8 @@ echo \app\widgets\ModularModal::widget();
                     ]) ?>
                 </div>
             </div>
-    </div>
+
+        </div>
 
 
     <?= $form->field($model, 'ms_office_license')->textInput(['maxlength' => true])->label("Office Licensz kulcs") ?>
