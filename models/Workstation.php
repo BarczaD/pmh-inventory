@@ -6,6 +6,7 @@ use app\models\Colleague;
 use app\models\Cpu;
 use app\models\Monitor;
 use app\models\Office;
+use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -25,36 +26,6 @@ class Workstation extends ActiveRecord implements IdentityInterface
             [['ms_office_license'], 'string'],
             [['hostname', 'os'], 'string', 'max' => 255],
         ];
-    }
-
-    public function getColleague()
-    {
-        return $this->hasOne(Colleague::class, ['id' => 'colleague_id']);
-    }
-
-    public function getOffice()
-    {
-        return $this->hasOne(Office::class, ['id' => 'office_id']);
-    }
-
-    public function getMonitor1()
-    {
-        return $this->hasOne(Monitor::class, ['id' => 'monitor_id1']);
-    }
-
-    public function getMonitor2()
-    {
-        return $this->hasOne(Monitor::class, ['id' => 'monitor_id2']);
-    }
-
-    public function getCpu()
-    {
-        return $this->hasOne(Cpu::class, ['id' => 'cpu_id']);
-    }
-
-    public function getBrand()
-    {
-        return $this->hasOne(Brand::class, ['id' => 'brand_id']);
     }
 
     public static function findIdentity($id)
@@ -81,4 +52,45 @@ class Workstation extends ActiveRecord implements IdentityInterface
     {
         return $this->getAuthKey() === $authKey;
     }
+
+    public function getBrand()
+    {
+        return $this->hasOne(Brand::class, ['id' => 'brand_id']);
+    }
+
+    public function getColleague()
+    {
+        return $this->hasOne(Colleague::class, ['id' => 'colleague_id']);
+    }
+
+    public function getCpu()
+    {
+        return $this->hasOne(Cpu::class, ['id' => 'cpu_id']);
+    }
+
+    public function getMonitor()
+    {
+        return $this->hasOne(Monitor::class, ['id' => 'monitor_id1']);
+    }
+
+    public function getOffice()
+    {
+        return $this->hasOne(Office::class, ['id' => 'office_id']);
+    }
+
+    public function saveWorkstation()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            if (!$this->save(false)) {
+                throw new \Exception("Can't save workstation");
+            }
+            $transaction->commit();
+            return true;
+        } catch (\Exception $ex) {
+            $transaction->rollBack();
+            return false;
+        }
+    }
+
 }

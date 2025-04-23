@@ -45,4 +45,10 @@ class Monitor extends ActiveRecord implements IdentityInterface
     {
         return $this->getAuthKey() === $authKey;
     }
+
+    public static function getMonitors()
+    {
+        return static::find()->all();
+    }
+
 }

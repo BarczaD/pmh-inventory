@@ -19,4 +19,9 @@ class MonitorController extends Controller
         return $this->renderAjax('_monitorForm', ['model' => $model]);
     }
 
+    public static function getMonitors()
+    {
+        return Monitor::getMonitors();
+    }
+
 }

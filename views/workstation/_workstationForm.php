@@ -106,7 +106,7 @@ echo \app\widgets\ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'monitor_id1',
-                        ArrayHelper::map(Monitor::find()->all(), 'id', 'name'),
+                        ArrayHelper::map(Monitor::find()->all(), 'id', 'model'),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki a Monitort...']
                     ) ?>
                     <?= Html::a('+', ['monitor/create'], [
@@ -123,7 +123,7 @@ echo \app\widgets\ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'monitor_id2',
-                        ArrayHelper::map(Monitor::find()->all(), 'id', 'name'),
+                        ArrayHelper::map(Monitor::find()->all(), 'id', 'model'),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki a Monitort...']
                     ) ?>
                     <?= Html::a('+', ['monitor/create'], [

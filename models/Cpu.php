@@ -34,6 +34,7 @@ class Cpu extends ActiveRecord implements IdentityInterface
         } catch (\Exception $e) {
             $transaction->rollBack();
             Yii::error("Regisztráció sikertelen: " . $e->getMessage(), __METHOD__);
+            return false;
         }
     }
 
@@ -60,5 +61,15 @@ class Cpu extends ActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         return $this->getAuthKey() === $authKey;
+    }
+
+    public function getBrand()
+    {
+        return $this->brand;
+    }
+
+    public static function findByModel($model)
+    {
+        return static::findOne(['model' => $model]);
     }
 }

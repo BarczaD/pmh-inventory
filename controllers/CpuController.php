@@ -19,4 +19,9 @@ class CpuController extends Controller
 
         return $this->renderAjax('_cpuForm', ['model' => $model]);
     }
+
+    public static function getCpus()
+    {
+        return Cpu::find()->with(['brand', 'model']);
+    }
 }

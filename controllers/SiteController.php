@@ -5,9 +5,10 @@ namespace app\controllers;
 use app\models\forms\ContactForm;
 use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
-use app\models\forms\Workstation;
 use app\models\forms\WorkstationForm;
+use app\models\Workstation;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -144,11 +145,42 @@ class SiteController extends Controller
     {
         $model = new WorkstationForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return $this->goHome();
+            $model = new Workstation();
+            $model->setAttributes($model->attributes);
+            if ($model->saveWorkstation()) {
+                return $this->actionManageData();
+            }
+            return false;
         }
 
         return $this->render('new-workstation', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionManageData()
+    {
+        $workstationProvider = new ActiveDataProvider([
+            'query' => WorkstationController::getWorkstations(),
+            'pagination' => [],
+            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+        ]);
+
+        $cpuProvider = new ActiveDataProvider([
+           'query' => CpuController::getCpus(),
+           'pagination' => [],
+           'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+        ]);
+
+        $monitorProvider = new ActiveDataProvider([
+            'query' => MonitorController::getMonitors(),
+            'pagination' => [],
+            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+        ]);
+
+        return $this->render('manage-data', [
+            'workstationProvider' => $workstationProvider,
+            'cpuProvider' => $cpuProvider,
         ]);
     }
 }

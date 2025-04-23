@@ -44,4 +44,9 @@ class Office extends ActiveRecord implements IdentityInterface
     {
         return $this->getAuthKey() === $authKey;
     }
+
+    public static function findByName($name)
+    {
+        return static::findOne(['name' => $name]);
+    }
 }

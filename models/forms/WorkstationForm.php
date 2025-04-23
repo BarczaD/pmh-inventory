@@ -5,6 +5,8 @@ namespace app\models\forms;
 use app\models\Colleague;
 use app\models\Cpu;
 use app\models\Monitor;
+use app\models\Workstation;
+use Yii;
 use yii\base\Model;
 
 class WorkstationForm extends Model
