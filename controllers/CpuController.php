@@ -22,6 +22,11 @@ class CpuController extends Controller
 
     public static function getCpus()
     {
-        return Cpu::find()->with(['brand', 'model']);
+        return Cpu::getCpus();
+    }
+
+    public function actionDelete($id)
+    {
+        return Cpu::deleteCpu($id);
     }
 }

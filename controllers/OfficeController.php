@@ -8,6 +8,11 @@ use yii\web\Controller;
 
 class OfficeController extends Controller
 {
+    public static function getOffices()
+    {
+        return Office::find()->with();
+    }
+
     public function actionCreate()
     {
         $model = new Office();

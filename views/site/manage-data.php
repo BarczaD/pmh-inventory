@@ -2,6 +2,7 @@
 
 /** @var yii\web\View $this */
 
+use app\models\Monitor;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use app\widgets\ModularModal;
@@ -9,6 +10,9 @@ use yii\widgets\Pjax;
 
 /** @var yii\data\ActiveDataProvider $workstationProvider */
 /** @var yii\data\ActiveDataProvider $cpuProvider */
+/** @var \yii\data\ActiveDataProvider $monitorProvider */
+/** @var \yii\data\ActiveDataProvider $officeProvider */
+/** @var \yii\data\ActiveDataProvider $colleagueProvider */
 
 echo ModularModal::widget();
 
@@ -19,43 +23,7 @@ $this->title = 'Adatok Kezelése';
     <div class="jumbotron text-center bg-transparent mt-5 mb-5">
         <h1 class="display-4">Adatok kezelése</h1>
 
-        <div class="row">
-            <div class="col-lg-4 mb-3">
-                <?php Pjax::begin(); ?>
 
-                <?= GridView::widget([
-                    'dataProvider' => $cpuProvider,
-                    'columns' => [
-                        [
-                            'label' => 'Brand',
-                            'value' => fn($model) => $model->brand->name ?? '-',
-                        ],
-                        [
-                            'label' => 'Modell',
-                            'value' => fn($model) => $model->model->name ?? '-',
-                        ],
-                    ],
-                ]); ?>
-
-                <?php Pjax::end(); ?>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-            </div>
-        </div>
     </div>
 
     <div class="body-content">
@@ -65,10 +33,9 @@ $this->title = 'Adatok Kezelése';
         <?= GridView::widget([
             'dataProvider' => $workstationProvider,
             'columns' => [
-                'hostname',
                 [
                     'label' => 'Hostname',
-                    'value' => fn($model) => $model->hostname->name ?? '-',
+                    'value' => fn($model) => $model->hostname,
                 ],
                 [
                     'label' => 'Brand',
@@ -80,11 +47,11 @@ $this->title = 'Adatok Kezelése';
                 ],
                 [
                     'label' => 'RAM',
-                    'value' => fn($model) => $model->ram->model ?? '-',
+                    'value' => fn($model) => $model->ram ?? '-',
                 ],
                 [
                     'label' => 'OS',
-                    'value' => fn($model) => $model->os->model ?? '-',
+                    'value' => fn($model) => $model->os ?? '-',
                 ],
                 [
                     'label' => 'Kolléga',
@@ -95,21 +62,221 @@ $this->title = 'Adatok Kezelése';
                     'value' => fn($model) => $model->office->name ?? '-',
                 ],
                 [
-                    'label' => 'Monitor1',
-                    'value' => fn($model) => $model->monitor1->model ?? '-',
+                    'label' => 'Monitor 1',
+                    'value' => fn($model) =>
+                            Monitor::findIdentity($model->monitor_id1)->brand . ' ' .
+                            Monitor::findIdentity($model->monitor_id1)->model . ' ' .
+                            ' (S/N: ' .Monitor::findIdentity($model->monitor_id1)->s_n . ')' ?? '-',
                 ],
                 [
-                    'label' => 'Monitor2',
-                    'value' => fn($model) => $model->monitor2->model ?? '-',
+                    'label' => 'Monitor 2',
+                    'value' => function ($model) {
+                        $monitor = Monitor::findIdentity($model->monitor_id2);
+                        return $monitor
+                            ? "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})"
+                            : '-';
+                    },
                 ],
                 [
                     'label' => 'Leírás',
                     'value' => fn($model) => $model->description->model ?? '-',
                 ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{update}',
+                    'buttons' => [
+                        'update' => function ($url, $model) {
+                            return Html::a('<i class="bi bi-pencil-square"></i>', ['workstation/update', 'id' => $model->id], [
+                                'class' => 'btn btn-sm btn-outline-warning',
+                                'title' => 'Módosítás',
+                            ]);
+                        },
+                    ],
+                ],
+
+
             ],
         ]); ?>
 
         <?php Pjax::end(); ?>
+
+
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <?php Pjax::begin(); ?>
+
+                <?= GridView::widget([
+                    'dataProvider' => $cpuProvider,
+                    'columns' => [
+                        [
+                            'label' => 'Brand',
+                            'value' => fn($model) => $model->brand ?? '-',
+                        ],
+                        [
+                            'label' => 'Modell',
+                            'value' => fn($model) => $model->model ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<i class="bi bi-trash"></i>', ['cpu/delete', 'id' => $model->id], [
+                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'title' => 'Törlés',
+                                        'data' => [
+                                            'confirm' => 'Biztosan törlöd?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                                },
+                            ],
+                        ],
+
+                    ],
+                ]); ?>
+
+                <?php Pjax::end(); ?>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <?php Pjax::begin(); ?>
+
+                <?= GridView::widget([
+                    'dataProvider' => $officeProvider,
+                    'columns' => [
+                        [
+                            'label' => 'Brand',
+                            'value' => fn($model) => $model->name ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<i class="bi bi-trash"></i>', ['office/delete', 'id' => $model->id], [
+                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'title' => 'Törlés',
+                                        'data' => [
+                                            'confirm' => 'Biztosan törlöd?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                                },
+                            ],
+                        ],
+
+                    ],
+                ]); ?>
+
+                <?php Pjax::end(); ?>
+            </div>
+            <div class="col-lg-4">
+                <?php Pjax::begin(); ?>
+
+                <?= GridView::widget([
+                    'dataProvider' => $monitorProvider,
+                    'columns' => [
+                        [
+                            'label' => 'Brand',
+                            'value' => fn($model) => $model->brand ?? '-',
+                        ],
+                        [
+                            'label' => 'Modell',
+                            'value' => fn($model) => $model->model ?? '-',
+                        ],
+                        [
+                            'label' => 'S/N',
+                            'value' => fn($model) => $model->s_n ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<i class="bi bi-trash"></i>', ['monitor/delete', 'id' => $model->id], [
+                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'title' => 'Törlés',
+                                        'data' => [
+                                            'confirm' => 'Biztosan törlöd?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                                },
+                            ],
+                        ],
+
+                    ],
+                ]); ?>
+
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <?php Pjax::begin(); ?>
+
+                <?= GridView::widget([
+                    'dataProvider' => $colleagueProvider,
+                    'columns' => [
+                        [
+                            'label' => 'Név',
+                            'value' => fn($model) => $model->name ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<i class="bi bi-trash"></i>', ['colleague/delete', 'id' => $model->id], [
+                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'title' => 'Törlés',
+                                        'data' => [
+                                            'confirm' => 'Biztosan törlöd?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                                },
+                            ],
+                        ],
+
+                    ],
+                ]); ?>
+
+                <?php Pjax::end(); ?>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <?php Pjax::begin(); ?>
+
+                <?= GridView::widget([
+                    'dataProvider' => $officeProvider,
+                    'columns' => [
+                        [
+                            'label' => 'Brand',
+                            'value' => fn($model) => $model->name ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<i class="bi bi-trash"></i>', ['office/delete', 'id' => $model->id], [
+                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'title' => 'Törlés',
+                                        'data' => [
+                                            'confirm' => 'Biztosan törlöd?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                                },
+                            ],
+                        ],
+
+                    ],
+                ]); ?>
+
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
 
 
         <?php

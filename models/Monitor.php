@@ -48,7 +48,12 @@ class Monitor extends ActiveRecord implements IdentityInterface
 
     public static function getMonitors()
     {
-        return static::find()->all();
+        return static::find()->with();
+    }
+
+    public static function findMonitorBySerial($s_n)
+    {
+        return static::findOne(['s_n' => $s_n]);
     }
 
 }

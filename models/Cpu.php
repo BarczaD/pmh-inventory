@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\StaleObjectException;
 use yii\web\IdentityInterface;
 
 class Cpu extends ActiveRecord implements IdentityInterface
@@ -72,4 +73,25 @@ class Cpu extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['model' => $model]);
     }
+
+    public static function getCpus()
+    {
+        return static::find()->with();
+    }
+
+    public static function deleteCpu($id)
+    {
+        $model = Cpu::findOne($id);
+        if ($model) {
+            try {
+                $model->delete();
+                return true;
+            } catch (StaleObjectException $e) {
+
+            } catch (\Throwable $e) {
+                return false;
+            }
+        }
+    }
+
 }

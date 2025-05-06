@@ -12,6 +12,11 @@ class Colleague extends ActiveRecord implements IdentityInterface
         return 'colleague';
     }
 
+    public static function getColleagues()
+    {
+        return static::find()->with();
+    }
+
     public function rules()
     {
         return [

@@ -83,12 +83,37 @@ class Workstation extends ActiveRecord implements IdentityInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$this->save(false)) {
-                throw new \Exception("Can't save workstation");
+                throw new \Exception("DB hiba: nem sikerült rögzíteni a munkaállomást!");
             }
             $transaction->commit();
             return true;
         } catch (\Exception $ex) {
             $transaction->rollBack();
+            Yii::error($ex->getMessage());
+            return false;
+        }
+    }
+
+    public function processPost($post)
+    {
+        try {
+            $post = $post['Workstation'];
+
+            $this->hostname = $post['hostname'];
+            $this->brand_id = intval($post['brand_id']);
+            $this->cpu_id = intval($post['cpu_id']);
+            $this->ram = intval($post['ram']);
+            $this->os = $post['os'];
+            $this->colleague_id = intval($post['colleague_id']);
+            $this->monitor_id1 = intval($post['monitor_id1']);
+            $this->monitor_id2 = $post['monitor_id2'] != "" ? intval($post['monitor_id2']) : null;
+            $this->ms_office_license = $post['ms_office_license'];
+            $this->software_list = $post['software_list'];
+            $this->description = $post['description'] != "" ? $post['description'] : null;
+
+            return true;
+        } catch (\Exception $ex) {
+            echo($ex->getMessage());
             return false;
         }
     }

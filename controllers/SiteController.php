@@ -143,10 +143,9 @@ class SiteController extends Controller
 
     public function actionNewWorkstation()
     {
-        $model = new WorkstationForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model = new Workstation();
-            $model->setAttributes($model->attributes);
+        $model = new Workstation();
+        if ($model->load(Yii::$app->request->post())) {  // && $model->validate()
+            $model->processPost(Yii::$app->request->post());
             if ($model->saveWorkstation()) {
                 return $this->actionManageData();
             }
@@ -178,9 +177,23 @@ class SiteController extends Controller
             'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
         ]);
 
+        $officeProvider = new ActiveDataProvider([
+           'query' => OfficeController::getOffices(),
+           'pagination' => [],
+           'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+        ]);
+        $colleagueProvider = new ActiveDataProvider([
+            'query' => ColleagueController::getColleagues(),
+            'pagination' => [],
+            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+        ]);
+
         return $this->render('manage-data', [
             'workstationProvider' => $workstationProvider,
             'cpuProvider' => $cpuProvider,
+            'monitorProvider' => $monitorProvider,
+            'officeProvider' => $officeProvider,
+            'colleagueProvider' => $colleagueProvider,
         ]);
     }
 }
