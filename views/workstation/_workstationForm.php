@@ -13,7 +13,7 @@ use app\models\Office;
 /** @var app\models\Workstation $model */
 /** @var yii\widgets\ActiveForm $form */
 
-//echo \app\widgets\ModularModal::widget();
+echo \app\widgets\ModularModal::widget();
 ?>
 
 <div class="workstation-form">
@@ -24,125 +24,152 @@ use app\models\Office;
         <div class="col-lg-4 mb-3">
             <?= $form->field($model, 'hostname')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'brand_id', [
-                'template' => '<label class="form-label">{label}</label>
-                           <div class="d-flex align-items-center gap-2">
-                               {input}
-                               ' . Html::a('+', ['brand/create'], [
+            <div class="form-group">
+                <label class="form-label" for="workstation-brand_id">Brand</label>
+                <div class="d-flex align-items-center gap-2">
+                    <?= Html::activeDropDownList(
+                        $model,
+                        'brand_id',
+                        ArrayHelper::map(Brand::find()->all(), 'id', 'name'),
+                        ['class' => 'form-control', 'prompt' => 'Válaszd ki a Brandet...']
+                    ) ?>
+                    <?= Html::a('+', ['brand/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
                         'title' => 'Új Brand hozzáadása',
-                    ]) . '
-                               {error}
-                           </div>',
-            ])->dropDownList(
-                ArrayHelper::map(Brand::find()->all(), 'id', 'name'),
-                ['class' => 'form-control', 'prompt' => 'Válaszd ki a Brandet...']
-            ) ?>
+                    ]) ?>
+                </div>
+            </div>
 
-            <?= $form->field($model, 'cpu_id', [
-                'template' => '<label class="form-label">{label}</label>
-                           <div class="d-flex align-items-center gap-2">
-                               {input}
-                               ' . Html::a('+', ['cpu/create'], [
+            <div class="form-group">
+                <label class="form-label" for="workstation-cpu_id">CPU</label>
+                <div class="d-flex align-items-center gap-2">
+                    <?= Html::activeDropDownList(
+                        $model,
+                        'cpu_id',
+                        \yii\helpers\ArrayHelper::map(
+                            \app\models\Cpu::find()->all(),
+                            'id',
+                            function ($cpu) {
+                                return "{$cpu->brand} {$cpu->model}";
+                            }
+                        ),
+                        ['class' => 'form-control', 'prompt' => 'Válaszd ki a CPU-t...']
+                    ) ?>
+                    <?= Html::a('+', ['cpu/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
                         'title' => 'Új CPU hozzáadása',
-                    ]) . '
-                               {error}
-                           </div>',
-            ])->dropDownList(
-                ArrayHelper::map(Cpu::find()->all(), 'id', fn($cpu) => "{$cpu->brand} {$cpu->model}"),
-                ['class' => 'form-control', 'prompt' => 'Válaszd ki a CPU-t...']
-            ) ?>
+                    ]) ?>
+                </div>
+            </div>
+
         </div>
-
         <div class="col-lg-4 mb-3">
-            <?= $form->field($model, 'ram')->textInput()->label("RAM") ?>
+            <div class="form-group">
+                <?= $form->field($model, 'ram')->textInput()->label("RAM") ?>
+            </div>
+            <div class="form-group">
+                <?= $form->field($model, 'os')->textInput(['maxlength' => true])->label("OS") ?>
+            </div>
 
-            <?= $form->field($model, 'os')->textInput(['maxlength' => true])->label("OS") ?>
-
-            <?= $form->field($model, 'colleague_id', [
-                'template' => '<label class="form-label">{label}</label>
-                           <div class="d-flex align-items-center gap-2">
-                               {input}
-                               ' . Html::a('+', ['colleague/create'], [
+            <div class="form-group">
+                <label class="form-label" for="workstation-brand_id">Kolléga</label>
+                <div class="d-flex align-items-center gap-2">
+                    <?= Html::activeDropDownList(
+                        $model,
+                        'colleague_id',
+                        ArrayHelper::map(Colleague::find()->all(), 'id', 'name'),
+                        ['class' => 'form-control', 'prompt' => 'Válaszd ki a Kollégát...']
+                    ) ?>
+                    <?= Html::a('+', ['colleague/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
                         'title' => 'Új Kolléga hozzáadása',
-                    ]) . '
-                               {error}
-                           </div>',
-            ])->dropDownList(
-                ArrayHelper::map(Colleague::find()->all(), 'id', 'name'),
-                ['class' => 'form-control', 'prompt' => 'Válaszd ki a Kollégát...']
-            ) ?>
+                    ]) ?>
+                </div>
+            </div>
         </div>
-
-        <div class="col-lg-4 mb-3">
-            <?= $form->field($model, 'office_id', [
-                'template' => '<label class="form-label">{label}</label>
-                           <div class="d-flex align-items-center gap-2">
-                               {input}
-                               ' . Html::a('+', ['office/create'], [
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label class="form-label" for="workstation-brand_id">Iroda</label>
+                <div class="d-flex align-items-center gap-2">
+                    <?= Html::activeDropDownList(
+                        $model,
+                        'office_id',
+                        ArrayHelper::map(Office::find()->all(), 'id', 'name'),
+                        ['class' => 'form-control', 'prompt' => 'Válaszd ki az Irodát...']
+                    ) ?>
+                    <?= Html::a('+', ['office/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
-                        'title' => 'Új Iroda hozzáadása',
-                    ]) . '
-                               {error}
-                           </div>',
-            ])->dropDownList(
-                ArrayHelper::map(Office::find()->all(), 'id', 'name'),
-                ['class' => 'form-control', 'prompt' => 'Válaszd ki az Irodát...']
-            ) ?>
-
-            <?= $form->field($model, 'monitor_id1', [
-                'template' => '<label class="form-label">{label}</label>
-                           <div class="d-flex align-items-center gap-2">
-                               {input}
-                               ' . Html::a('+', ['monitor/create'], [
+                        'title' => 'Új Kolléga hozzáadása',
+                    ]) ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="workstation-monitor_id1">1. Monitor</label>
+                <div class="d-flex align-items-center gap-2">
+                    <?= Html::activeDropDownList(
+                        $model,
+                        'monitor_id1',
+                        \yii\helpers\ArrayHelper::map(
+                            \app\models\Monitor::find()->all(),
+                            'id',
+                            function ($monitor) {
+                                return "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})";
+                            }
+                        ),
+                        ['class' => 'form-control', 'prompt' => 'Válaszd ki a Monitort...']
+                    ) ?>
+                    <?= Html::a('+', ['monitor/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
                         'title' => 'Új Monitor hozzáadása',
-                    ]) . '
-                               {error}
-                           </div>',
-            ])->dropDownList(
-                ArrayHelper::map(Monitor::find()->all(), 'id', fn($m) => "{$m->brand} {$m->model} S/N: {$m->s_n}"),
-                ['class' => 'form-control', 'prompt' => 'Válaszd ki az 1. Monitort...']
-            ) ?>
+                    ]) ?>
+                </div>
+            </div>
 
-            <?= $form->field($model, 'monitor_id2', [
-                'template' => '<label class="form-label">{label}</label>
-                           <div class="d-flex align-items-center gap-2">
-                               {input}
-                               ' . Html::a('+', ['monitor/create'], [
+
+            <div class="form-group">
+                <label class="form-label" for="workstation-monitor_id1">1. Monitor</label>
+                <div class="d-flex align-items-center gap-2">
+                    <?= Html::activeDropDownList(
+                        $model,
+                        'monitor_id2',
+                        \yii\helpers\ArrayHelper::map(
+                            \app\models\Monitor::find()->all(),
+                            'id',
+                            function ($monitor) {
+                                return "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})";
+                            }
+                        ),
+                        ['class' => 'form-control', 'prompt' => 'Válaszd ki a Monitort...']
+                    ) ?>
+                    <?= Html::a('+', ['monitor/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
                         'title' => 'Új Monitor hozzáadása',
-                    ]) . '
-                               {error}
-                           </div>',
-            ])->dropDownList(
-                ArrayHelper::map(Monitor::find()->all(), 'id', fn($m) => "{$m->brand} {$m->model} S/N: {$m->s_n}"),
-                ['class' => 'form-control', 'prompt' => 'Válaszd ki a 2. Monitort...']
-            ) ?>
+                    ]) ?>
+                </div>
+            </div>
+
         </div>
+
+
+        <?= $form->field($model, 'ms_office_license')->textInput(['maxlength' => true])->label("Office Licensz kulcs") ?>
+
+        <?= $form->field($model, 'software_list')->textarea(['rows' => 3])->label("Szoftverek listája") ?>
+
+        <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
+
+        <div class="form-group">
+            <?= Html::submitButton('Beküldés', ['class' => 'btn btn-success']) ?>
+        </div>
+
+
+
+
+        <?php ActiveForm::end(); ?>
+
     </div>
-
-
-    <?= $form->field($model, 'ms_office_license')->textInput(['maxlength' => true])->label("Office Licensz kulcs") ?>
-    <?= $form->field($model, 'software_list')->textarea(['rows' => 3])->label("Szoftverek listája") ?>
-    <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
-
-
-    <div class="form-group">
-        <?= Html::submitButton('Beküldés', ['class' => 'btn btn-success']) ?>
-    </div>
-
-
-
-
-    <?php ActiveForm::end(); ?>
-
-</div>

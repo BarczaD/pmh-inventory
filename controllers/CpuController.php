@@ -27,6 +27,20 @@ class CpuController extends Controller
 
     public function actionDelete($id)
     {
-        return Cpu::deleteCpu($id);
+        if (Cpu::deleteCpu($id)) {
+            echo "
+                <script>
+                alert(\"A CPU törlése sikeres!\");
+                </script>
+            ";
+            $this->refresh(true);
+        } else {
+            echo "
+                <script>
+                alert(\"Nem sikerült a CPU törlése\");
+                </script>
+            ";
+            $this->refresh(true);
+        }
     }
 }
