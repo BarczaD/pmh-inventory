@@ -79,7 +79,7 @@ $this->title = 'Adatok Kezelése';
                 ],
                 [
                     'label' => 'Leírás',
-                    'value' => fn($model) => $model->description->model ?? '-',
+                    'value' => fn($model) => $model->description ?? '-',
                 ],
                 [
                     'class' => 'yii\grid\ActionColumn',

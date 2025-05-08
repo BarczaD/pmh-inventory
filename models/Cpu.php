@@ -81,14 +81,15 @@ class Cpu extends ActiveRecord implements IdentityInterface
 
     public static function deleteCpu($id)
     {
+        $transaction = Yii::$app->db->beginTransaction();
         $model = Cpu::findOne($id);
         if ($model) {
             try {
                 $model->delete();
+                $transaction->commit();
                 return true;
-            } catch (StaleObjectException $e) {
-
             } catch (\Throwable $e) {
+                $transaction->rollBack();
                 return false;
             }
         }

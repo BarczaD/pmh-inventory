@@ -33,14 +33,13 @@ class CpuController extends Controller
                 alert(\"A CPU törlése sikeres!\");
                 </script>
             ";
-            $this->refresh(true);
         } else {
             echo "
                 <script>
                 alert(\"Nem sikerült a CPU törlése\");
                 </script>
             ";
-            $this->refresh(true);
         }
+        $this->refresh();
     }
 }
