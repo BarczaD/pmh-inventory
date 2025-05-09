@@ -25,6 +25,21 @@ class ColleagueController extends Controller implements QueryInterface
         return $this->renderAjax('_colleagueForm', ['model' => $model]);
     }
 
+    public function actionDelete($id)
+    {
+        try {
+            if (Colleague::deleteColleague($id)) {
+                Yii::$app->session->setFlash('success', 'Kolléga sikeresen törölve.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Kolléga nem található.');
+            }
+        } catch (\Throwable $th) {
+            Yii::$app->session->setFlash('error', 'A kolléga törlése közben hiba lépett fel:<br>' . $th->getMessage());
+        }
+
+        $this->redirect(["site/manage-data"]);
+    }
+
     public function all($db = null)
     {
         // TODO: Implement all() method.

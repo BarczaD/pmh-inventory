@@ -12,6 +12,8 @@ class Brand extends ActiveRecord implements IdentityInterface
         return 'brand';
     }
 
+
+
     public function rules()
     {
         return [
@@ -48,5 +50,21 @@ class Brand extends ActiveRecord implements IdentityInterface
     public static function findByName($name)
     {
         return static::findOne(['name' => $name]);
+    }
+
+    public static function deleteBrand($id)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $model = static::findOne($id);
+        if ($model) {
+            try {
+                $model->delete();
+                $transaction->commit();
+                return true;
+            } catch (\Throwable $th) {
+                $transaction->rollBack();
+                throw $th;
+            }
+        }
     }
 }

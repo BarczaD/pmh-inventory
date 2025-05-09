@@ -23,4 +23,18 @@ class OfficeController extends Controller
 
         return $this->renderAjax('_officeForm', ['model' => $model]);
     }
+
+    public function actionDelete($id) {
+        try {
+            if (Office::deleteOffice($id)) {
+                Yii::$app->session->setFlash('success', 'Iroda sikeresen törölve.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Iroda nem található.');
+            }
+        } catch (\Throwable $th) {
+            Yii::$app->session->setFlash('error', 'Az iroda törlése közben hiba lépett fel:<br>' . $th->getMessage());
+        }
+
+        $this->redirect(["site/manage-data"]);
+    }
 }

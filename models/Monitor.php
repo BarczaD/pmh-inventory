@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -11,6 +12,8 @@ class Monitor extends ActiveRecord implements IdentityInterface
     {
         return 'monitor';
     }
+
+
 
     public function rules()
     {
@@ -54,6 +57,22 @@ class Monitor extends ActiveRecord implements IdentityInterface
     public static function findMonitorBySerial($s_n)
     {
         return static::findOne(['s_n' => $s_n]);
+    }
+
+    public static function deleteMonitor($id)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $model = static::findOne($id);
+        if ($model) {
+            try {
+                $model->delete();
+                $transaction->commit();
+                return true;
+            } catch (\Throwable $th) {
+                $transaction->rollBack();
+                throw $th;
+            }
+        }
     }
 
 }

@@ -52,7 +52,6 @@ $(document).on('beforeSubmit', 'form#modal-form', function (e) {
 
     $.post(form.attr('action'), form.serialize())
         .done(function (response) {
-            console.log('Server response:', response);
             if (response === 'success') {
                 $('#universal-modal').modal('hide');
                 location.reload();
@@ -61,7 +60,7 @@ $(document).on('beforeSubmit', 'form#modal-form', function (e) {
             }
         })
         .fail(function () {
-            alert('An error occurred. Please try again.');
+            alert('Hiba lépett a modal megjelenítése közben.');
         })
         .always(function () {
             form.data('submitted', false);

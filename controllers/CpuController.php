@@ -25,21 +25,17 @@ class CpuController extends Controller
         return Cpu::getCpus();
     }
 
-    public function actionDelete($id)
-    {
-        if (Cpu::deleteCpu($id)) {
-            echo "
-                <script>
-                alert(\"A CPU törlése sikeres!\");
-                </script>
-            ";
-        } else {
-            echo "
-                <script>
-                alert(\"Nem sikerült a CPU törlése\");
-                </script>
-            ";
+    public function actionDelete($id) {
+        try {
+            if (Cpu::deleteCpu($id)) {
+                Yii::$app->session->setFlash('success', 'CPU sikeresen törölve.');
+            } else {
+                Yii::$app->session->setFlash('error', 'CPU nem található.');
+            }
+        } catch (\Throwable $th) {
+            Yii::$app->session->setFlash('error', 'A CPU törlése közben hiba lépett fel:<br>' . $th->getMessage());
         }
-        $this->refresh();
+
+        $this->redirect(["site/manage-data"]);
     }
 }

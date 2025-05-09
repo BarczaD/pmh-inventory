@@ -13,10 +13,12 @@ use yii\widgets\Pjax;
 /** @var \yii\data\ActiveDataProvider $monitorProvider */
 /** @var \yii\data\ActiveDataProvider $officeProvider */
 /** @var \yii\data\ActiveDataProvider $colleagueProvider */
+/** @var string $alert */
 
 echo ModularModal::widget();
 
 $this->title = 'Adatok Kezelése';
+
 ?>
 <div class="site-index">
 
@@ -86,7 +88,7 @@ $this->title = 'Adatok Kezelése';
                     'template' => '{update}',
                     'buttons' => [
                         'update' => function ($url, $model) {
-                            return Html::a('<i class="bi bi-pencil-square"></i>', ['workstation/update', 'id' => $model->id], [
+                            return Html::a('<i class="bi bi-pencil-square"></i>', ['workstationController/update', 'id' => $model->id], [
                                 'class' => 'btn btn-sm btn-outline-warning',
                                 'title' => 'Módosítás',
                             ]);
@@ -127,12 +129,12 @@ $this->title = 'Adatok Kezelése';
                                         'data' => [
                                             'confirm' => 'Biztosan törlöd?',
                                             'method' => 'post',
+                                            'pjax' => '1',
                                         ],
                                     ]);
                                 },
                             ],
                         ],
-
                     ],
                 ]); ?>
 
@@ -145,7 +147,7 @@ $this->title = 'Adatok Kezelése';
                     'dataProvider' => $officeProvider,
                     'columns' => [
                         [
-                            'label' => 'Brand',
+                            'label' => 'Iroda',
                             'value' => fn($model) => $model->name ?? '-',
                         ],
                         [
@@ -159,6 +161,7 @@ $this->title = 'Adatok Kezelése';
                                         'data' => [
                                             'confirm' => 'Biztosan törlöd?',
                                             'method' => 'post',
+                                            'pjax' => '1',
                                         ],
                                     ]);
                                 },
@@ -199,6 +202,7 @@ $this->title = 'Adatok Kezelése';
                                         'data' => [
                                             'confirm' => 'Biztosan törlöd?',
                                             'method' => 'post',
+                                            'pjax' => '1',
                                         ],
                                     ]);
                                 },
@@ -223,6 +227,24 @@ $this->title = 'Adatok Kezelése';
                             'value' => fn($model) => $model->name ?? '-',
                         ],
                         [
+                            'label' => 'Iroda',
+                            'value' => fn($model) => $model->department ?? '-',
+                        ],
+                        [
+                            'label' => 'Csoport',
+                            'value' => fn($model) => $model->group ?? '-',
+                        ],
+                        [
+                            'label' => 'Itt dolgozik még?',
+                            'value' => function($model) {
+                                if (!$model->archived) {
+                                    return 'Igen';
+                                } else {
+                                    return "Nem";
+                                }
+                            }
+                        ],
+                        [
                             'class' => 'yii\grid\ActionColumn',
                             'template' => '{delete}',
                             'buttons' => [
@@ -233,6 +255,7 @@ $this->title = 'Adatok Kezelése';
                                         'data' => [
                                             'confirm' => 'Biztosan törlöd?',
                                             'method' => 'post',
+                                            'pjax' => '1',
                                         ],
                                     ]);
                                 },
@@ -244,38 +267,7 @@ $this->title = 'Adatok Kezelése';
 
                 <?php Pjax::end(); ?>
             </div>
-            <div class="col-lg-6 mb-3">
-                <?php Pjax::begin(); ?>
 
-                <?= GridView::widget([
-                    'dataProvider' => $officeProvider,
-                    'columns' => [
-                        [
-                            'label' => 'Brand',
-                            'value' => fn($model) => $model->name ?? '-',
-                        ],
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{delete}',
-                            'buttons' => [
-                                'delete' => function ($url, $model) {
-                                    return Html::a('<i class="bi bi-trash"></i>', ['office/delete', 'id' => $model->id], [
-                                        'class' => 'btn btn-sm btn-outline-danger',
-                                        'title' => 'Törlés',
-                                        'data' => [
-                                            'confirm' => 'Biztosan törlöd?',
-                                            'method' => 'post',
-                                        ],
-                                    ]);
-                                },
-                            ],
-                        ],
-
-                    ],
-                ]); ?>
-
-                <?php Pjax::end(); ?>
-            </div>
         </div>
 
 

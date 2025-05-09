@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\web\IdentityInterface;
 
@@ -82,15 +83,15 @@ class Cpu extends ActiveRecord implements IdentityInterface
     public static function deleteCpu($id)
     {
         $transaction = Yii::$app->db->beginTransaction();
-        $model = Cpu::findOne($id);
+        $model = static::findOne($id);
         if ($model) {
             try {
                 $model->delete();
                 $transaction->commit();
                 return true;
-            } catch (\Throwable $e) {
+            } catch (\Throwable $th) {
                 $transaction->rollBack();
-                return false;
+                throw $th;
             }
         }
     }

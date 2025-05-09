@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -11,6 +12,8 @@ class Office extends ActiveRecord implements IdentityInterface
     {
         return 'office';
     }
+
+
 
     public function rules()
     {
@@ -48,5 +51,21 @@ class Office extends ActiveRecord implements IdentityInterface
     public static function findByName($name)
     {
         return static::findOne(['name' => $name]);
+    }
+
+    public static function deleteOffice($id)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        $model = static::findOne($id);
+        if ($model) {
+            try {
+                $model->delete();
+                $transaction->commit();
+                return true;
+            } catch (\Throwable $th) {
+                $transaction->rollBack();
+                throw $th;
+            }
+        }
     }
 }

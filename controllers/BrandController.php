@@ -19,4 +19,18 @@ class BrandController extends Controller
         return $this->renderAjax('_brandForm', ['model' => $model]);
     }
 
+    public function actionDelete($id)
+    {
+        try {
+            if (Brand::deleteBrand($id)) {
+                Yii::$app->session->setFlash('success', 'Brand sikeresen törölve.');
+            } else {
+                Yii::$app->session->setFlash('error', 'CPU nem található.');
+            }
+        } catch (\Throwable $th) {
+            Yii::$app->session->setFlash('error', 'A brand törlése közben hiba lépett fel:<br>' . $th->getMessage());
+        }
+
+        $this->redirect(["site/manage-data"]);
+    }
 }

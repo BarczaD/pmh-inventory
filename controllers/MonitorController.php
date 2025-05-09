@@ -25,6 +25,20 @@ class MonitorController extends Controller implements QueryInterface
         return Monitor::getMonitors();
     }
 
+    public function actionDelete($id) {
+        try {
+            if (Monitor::deleteMonitor($id)) {
+                Yii::$app->session->setFlash('success', 'Monitor sikeresen törölve.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Monitor nem található.');
+            }
+        } catch (\Throwable $th) {
+                Yii::$app->session->setFlash('error', 'A monitor törlése közben hiba lépett fel:<br>' . $th->getMessage());
+        }
+
+        $this->redirect(["site/manage-data"]);
+    }
+
     public function all($db = null)
     {
         // TODO: Implement all() method.
