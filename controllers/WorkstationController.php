@@ -27,38 +27,25 @@ class WorkstationController extends Controller implements QueryInterface
         return Workstation::find()->with(['brand', 'colleague', 'cpu', 'monitor', 'office']);
     }
 
-    public function registerWorkstation()
+    public function actionUpdate($id)
     {
-        /* DEPRECATED
-        $workstation = new Workstation();
-        $workstation->hostname = Yii::$app->request->post('hostname');
-        $workstation->brandId  = Brand::findByName(Yii::$app->request->post('brand'))->getId();
-        var_dump(Brand::findByName(Yii::$app->request->post('brand')));
-        $workstation->cpuId = Cpu::findByModel(Yii::$app->request->post('cpu'))->getId();
-        var_dump(Cpu::findByModel(Yii::$app->request->post('cpu')));
-        $workstation->ram = Yii::$app->request->post('ram');
-        $workstation->os = Yii::$app->request->post('os');
-        $workstation->colleagueId = Colleague::findByName(Yii::$app->request->post('colleague'))->getId();
-        var_dump(Colleague::findByName(Yii::$app->request->post('colleague')));
-        $workstation->officeId = Office::findByName(Yii::$app->request->post('office'))->getId();
-        var_dump(Office::findByName(Yii::$app->request->post('office')));
-        $workstation->monitorId1 = Monitor::findMonitorBySerial(explode(Yii::$app->request->post('monitor_id1'), 'S\N:')[1])->getId();
+        $model = Workstation::findIdentity($id);
 
-        if (Yii::$app->request->post('monitor_id2'))
-        {
-            $workstation->monitorId2 = Monitor::findMonitorBySerial(explode(Yii::$app->request->post('monitor_id2'), 'S\N:')[1])->getId();
-        } else
-        {
-            $workstation->monitorId2 = null;
+        if (!$model) {
+            Yii::$app->session->setFlash('error', 'Munkaállomás nem található.');
+            return $this->redirect(['manage-data']);
         }
 
-        $workstation->msOfficeLicense = Yii::$app->request->post('ms_office_license');
-        $workstation->softwareList = Yii::$app->request->post('software_list');
-        $workstation->description = Yii::$app->request->post('description');
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Munkaállomás sikeresen frissítve.');
+            return $this->redirect(['manage-data']);
+        }
 
-        $workstation->saveWorkstation();
-        */
+        return $this->renderAjax('update', [
+            'model' => $model,
+        ]);
     }
+
 
     public function all($db = null)
     {

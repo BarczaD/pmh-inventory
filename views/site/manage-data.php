@@ -88,10 +88,13 @@ $this->title = 'Adatok Kezelése';
                     'template' => '{update}',
                     'buttons' => [
                         'update' => function ($url, $model) {
-                            return Html::a('<i class="bi bi-pencil-square"></i>', ['workstationController/update', 'id' => $model->id], [
-                                'class' => 'btn btn-sm btn-outline-warning',
-                                'title' => 'Módosítás',
-                            ]);
+                            return Html::a(
+                                '<i class="bi bi-pencil-square"></i>', ['workstation/update', 'id' => $model->id],
+                                [
+                                    'class' => 'btn btn-sm btn-outline-primary',
+                                    'title' => 'Módosítás'
+                                ]
+                            );
                         },
                     ],
                 ],
