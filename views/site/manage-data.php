@@ -65,10 +65,12 @@ $this->title = 'Adatok Kezelése';
                 ],
                 [
                     'label' => 'Monitor 1',
-                    'value' => fn($model) =>
-                            Monitor::findIdentity($model->monitor_id1)->brand . ' ' .
-                            Monitor::findIdentity($model->monitor_id1)->model . ' ' .
-                            ' (S/N: ' .Monitor::findIdentity($model->monitor_id1)->s_n . ')' ?? '-',
+                    'value' => function ($model) {
+                        $monitor = Monitor::findIdentity($model->monitor_id1);
+                        return $monitor
+                            ? "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})"
+                            : '-';
+                    },
                 ],
                 [
                     'label' => 'Monitor 2',
@@ -92,14 +94,16 @@ $this->title = 'Adatok Kezelése';
                                 '<i class="bi bi-pencil-square"></i>', ['workstation/update', 'id' => $model->id],
                                 [
                                     'class' => 'btn btn-sm btn-outline-primary',
-                                    'title' => 'Módosítás'
+                                    'title' => 'Módosítás',
+                                    'data' => [
+                                        'method' => 'get',
+                                        'pjax' => '1',
+                                    ],
                                 ]
                             );
                         },
                     ],
                 ],
-
-
             ],
         ]); ?>
 
@@ -170,7 +174,6 @@ $this->title = 'Adatok Kezelése';
                                 },
                             ],
                         ],
-
                     ],
                 ]); ?>
 
@@ -264,7 +267,6 @@ $this->title = 'Adatok Kezelése';
                                 },
                             ],
                         ],
-
                     ],
                 ]); ?>
 

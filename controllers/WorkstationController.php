@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\models\Workstation;
 use Yii;
-use yii\base\Controller;
+use yii\web\Controller;
 use yii\db\QueryInterface;
 
 class WorkstationController extends Controller implements QueryInterface
@@ -33,15 +33,15 @@ class WorkstationController extends Controller implements QueryInterface
 
         if (!$model) {
             Yii::$app->session->setFlash('error', 'Munkaállomás nem található.');
-            return $this->redirect(['manage-data']);
+            $this->redirect(["site/manage-data"]);
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Munkaállomás sikeresen frissítve.');
-            return $this->redirect(['manage-data']);
+            $this->redirect(["site/manage-data"]);
         }
 
-        return $this->renderAjax('update', [
+        return $this->render('update', [
             'model' => $model,
         ]);
     }
