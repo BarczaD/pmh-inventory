@@ -13,6 +13,7 @@ use yii\widgets\Pjax;
 /** @var \yii\data\ActiveDataProvider $monitorProvider */
 /** @var \yii\data\ActiveDataProvider $officeProvider */
 /** @var \yii\data\ActiveDataProvider $colleagueProvider */
+/** @var \yii\data\ActiveDataProvider $brandProvider */
 /** @var string $alert */
 
 echo ModularModal::widget();
@@ -23,9 +24,7 @@ $this->title = 'Adatok Kezelése';
 <div class="site-index">
 
     <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Adatok kezelése</h1>
-
-
+        <h1 class="display-5">Adatok kezelése</h1>
     </div>
 
     <div class="body-content">
@@ -144,12 +143,6 @@ $this->title = 'Adatok Kezelése';
                         ],
                     ],
                 ]); ?>
-
-                <?php Pjax::end(); ?>
-            </div>
-            <div class="col-lg-4 mb-3">
-                <?php Pjax::begin(); ?>
-
                 <?= GridView::widget([
                     'dataProvider' => $officeProvider,
                     'columns' => [
@@ -177,9 +170,38 @@ $this->title = 'Adatok Kezelése';
                     ],
                 ]); ?>
 
+                <?= GridView::widget([
+                    'dataProvider' => $brandProvider,
+                    'columns' => [
+                        [
+                            'label' => 'PC Brand',
+                            'value' => fn($model) => $model->name ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<i class="bi bi-trash"></i>', ['brand/delete', 'id' => $model->id], [
+                                        'class' => 'btn btn-sm btn-outline-danger',
+                                        'title' => 'Törlés',
+                                        'data' => [
+                                            'confirm' => 'Biztosan törlöd?',
+                                            'method' => 'post',
+                                            'pjax' => '1',
+                                        ],
+                                    ]);
+                                },
+                            ],
+                        ],
+                    ]
+                ])
+
+                ?>
+
                 <?php Pjax::end(); ?>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-4 mb-3">
                 <?php Pjax::begin(); ?>
 
                 <?= GridView::widget([
@@ -196,6 +218,10 @@ $this->title = 'Adatok Kezelése';
                         [
                             'label' => 'S/N',
                             'value' => fn($model) => $model->s_n ?? '-',
+                        ],
+                        [
+                            'label' => 'Leírás',
+                            'value' => fn($model) => $model->description ?? '-',
                         ],
                         [
                             'class' => 'yii\grid\ActionColumn',
@@ -217,14 +243,6 @@ $this->title = 'Adatok Kezelése';
 
                     ],
                 ]); ?>
-
-                <?php Pjax::end(); ?>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 mb-3">
-                <?php Pjax::begin(); ?>
-
                 <?= GridView::widget([
                     'dataProvider' => $colleagueProvider,
                     'columns' => [
@@ -267,14 +285,35 @@ $this->title = 'Adatok Kezelése';
                                 },
                             ],
                         ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{toggle-archive}',
+                            'buttons' => [
+                                'toggle-archive' => function ($url, $model) {
+                                    $icon = $model->archived ? 'bi bi-box-arrow-in-down' : 'bi bi-box-arrow-up';
+                                    $label = $model->archived ? 'Visszaállítás' : 'Archiválás';
+
+                                    return Html::a(
+                                        "<i class='$icon'></i> $label",
+                                        ['colleague/toggle-archive', 'id' => $model->id],
+                                        [
+                                            'class' => 'btn btn-sm btn-outline-secondary',
+                                            'title' => $label,
+                                            'data' => [
+                                                'confirm' => 'Biztosan megváltoztatod az archíválási állapotot?',
+                                                'method' => 'post',
+                                            ],
+                                        ]
+                                    );
+                                },
+                            ],
+                        ],
                     ],
                 ]); ?>
 
                 <?php Pjax::end(); ?>
             </div>
-
         </div>
-
 
         <?php
         echo Html::a('Iroda hozzáadása gomb', ['office/create'], [

@@ -13,6 +13,10 @@ class Brand extends ActiveRecord implements IdentityInterface
         return 'brand';
     }
 
+    public static function getBrands()
+    {
+        return Brand::find()->with();
+    }
 
 
     public function rules()

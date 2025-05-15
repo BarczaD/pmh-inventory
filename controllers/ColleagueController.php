@@ -40,6 +40,21 @@ class ColleagueController extends Controller implements QueryInterface
         $this->redirect(["site/manage-data"]);
     }
 
+    public function actionToggleArchive($id)
+    {
+        $model = Colleague::findOne($id);
+
+        if ($model !== null) {
+            $model->toggleArchive();
+            Yii::$app->session->setFlash('success', $model->name . ' állapota sikeresen megváltoztatva.');
+        } else {
+            Yii::$app->session->setFlash('error', 'A kolléga nem található.');
+        }
+
+        return $this->redirect(['site/manage-data']);
+    }
+
+
     public function all($db = null)
     {
         // TODO: Implement all() method.

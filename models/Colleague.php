@@ -73,4 +73,11 @@ class Colleague extends ActiveRecord implements IdentityInterface
             }
         }
     }
+
+    public function toggleArchive()
+    {
+        $this->archived = !$this->archived;
+        return $this->save(false);
+    }
+
 }

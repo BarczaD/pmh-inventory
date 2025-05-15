@@ -14,19 +14,6 @@ use app\models\Office;
 /** @var yii\widgets\ActiveForm $form */
 
 echo \app\widgets\ModularModal::widget();
-if (Yii::$app->request->get('id')) {
-    echo Html::a(
-        'Munkaállomás törlése',
-        ['delete', 'id' => $model->id],
-        [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Biztosan törlöd ezt a munkaállomást?',
-                'method' => 'post',
-            ],
-        ]
-    ) ;
-}
 ?>
 
 <div class="workstation-form">
@@ -178,6 +165,21 @@ if (Yii::$app->request->get('id')) {
 
         <div class="form-group">
             <?= Html::submitButton('Beküldés', ['class' => 'btn btn-success']) ?>
+            <?php
+            if (Yii::$app->request->get('id')) {
+                echo Html::a(
+                    'Munkaállomás törlése',
+                    ['delete', 'id' => $model->id],
+                    [
+                        'class' => 'btn btn-danger',
+                        'data' => [
+                            'confirm' => 'Biztosan törlöd ezt a munkaállomást?',
+                            'method' => 'post',
+                        ],
+                    ]
+                ) ;
+            }
+            ?>
         </div>
 
 

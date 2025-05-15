@@ -8,6 +8,11 @@ use yii\web\Controller;
 
 class BrandController extends Controller
 {
+    public static function getBrands()
+    {
+        return Brand::getBrands();
+    }
+
     public function actionCreate()
     {
         $model = new Brand();

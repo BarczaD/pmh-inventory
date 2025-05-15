@@ -162,30 +162,36 @@ class SiteController extends Controller
         $workstationProvider = new ActiveDataProvider([
             'query' => WorkstationController::getWorkstations(),
             'pagination' => [],
-            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+            'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
         ]);
 
         $cpuProvider = new ActiveDataProvider([
            'query' => CpuController::getCpus(),
            'pagination' => [],
-           'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+           'sort' => ['defaultOrder' => ['brand' => SORT_ASC, 'model' => SORT_ASC]],
         ]);
 
         $monitorProvider = new ActiveDataProvider([
             'query' => MonitorController::getMonitors(),
             'pagination' => [],
-            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+            'sort' => ['defaultOrder' => ['brand' => SORT_ASC, 'model' => SORT_ASC]],
         ]);
 
         $officeProvider = new ActiveDataProvider([
            'query' => OfficeController::getOffices(),
            'pagination' => [],
-           'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+           'sort' => ['defaultOrder' => ['name' => SORT_ASC]],
         ]);
         $colleagueProvider = new ActiveDataProvider([
             'query' => ColleagueController::getColleagues(),
             'pagination' => [],
-            'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
+            'sort' => ['defaultOrder' => ['archived' => SORT_ASC, 'name' => SORT_ASC]],
+        ]);
+
+        $brandProvider = new ActiveDataProvider([
+            'query' => BrandController::getBrands(),
+            'pagination' => [],
+            'sort' => ['defaultOrder' => ['name' => SORT_ASC]],
         ]);
 
         return $this->render('manage-data', [
@@ -194,6 +200,7 @@ class SiteController extends Controller
             'monitorProvider' => $monitorProvider,
             'officeProvider' => $officeProvider,
             'colleagueProvider' => $colleagueProvider,
+            'brandProvider' => $brandProvider,
         ]);
     }
 }
