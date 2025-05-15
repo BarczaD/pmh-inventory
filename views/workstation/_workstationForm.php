@@ -14,6 +14,19 @@ use app\models\Office;
 /** @var yii\widgets\ActiveForm $form */
 
 echo \app\widgets\ModularModal::widget();
+if (Yii::$app->request->get('id')) {
+    echo Html::a(
+        'Munkaállomás törlése',
+        ['delete', 'id' => $model->id],
+        [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Biztosan törlöd ezt a munkaállomást?',
+                'method' => 'post',
+            ],
+        ]
+    ) ;
+}
 ?>
 
 <div class="workstation-form">

@@ -46,6 +46,21 @@ class WorkstationController extends Controller implements QueryInterface
         ]);
     }
 
+    public function actionDelete($id)
+    {
+        $model = Workstation::findOne($id);
+
+        if ($model !== null) {
+            $model->delete();
+            Yii::$app->session->setFlash('success', 'A munkaállomás sikeresen törölve.');
+        } else {
+            Yii::$app->session->setFlash('error', 'A munkaállomás nem található.');
+        }
+
+        return $this->redirect(['site/manage-data']);
+    }
+
+
 
     public function all($db = null)
     {
