@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use app\models\forms\Workstation;
+use app\models\forms\WorkstationForm;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -11,6 +11,11 @@ class Maintenance extends ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return 'maintenance';
+    }
+
+    public static function getMaintenances()
+    {
+        return static::find()->with();
     }
 
     public function rules()

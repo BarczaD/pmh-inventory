@@ -6,6 +6,7 @@ use app\models\forms\ContactForm;
 use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
 use app\models\forms\WorkstationForm;
+use app\models\Maintenance;
 use app\models\Workstation;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -153,6 +154,22 @@ class SiteController extends Controller
         }
 
         return $this->render('new-workstation', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionNewMaintenance()
+    {
+        $model = new Maintenance();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->processPost(Yii::$app->request->post());
+            if ($model->saveMaintenance()) {
+                return $this->actionManageData();
+            }
+            return false;
+        }
+
+        return $this->render('new-maintenance', [
             'model' => $model,
         ]);
     }

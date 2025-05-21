@@ -45,13 +45,14 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         $navbarItems[] = ['label' => 'Bejelentkezés', 'url' => ['/site/login']];
     } else {
         $navbarItems[] = ['label' => 'Új Munkaállomás', 'url' => ['/site/new-workstation']];
+        $navbarItems[] = ['label' => 'Új Karbantartás', 'url' => ['/site/new-maintenance']];
         $navbarItems[] = ['label' => 'Adatok Kezelése', 'url' => ['/site/manage-data']];
         $navbarItems[] = ['label' => 'Regisztráció', 'url' => ['/site/signup']];
         $navbarItems[] = !Yii::$app->user->isGuest
                 ? '<li class="nav-item">'
                 . Html::beginForm(['/site/logout'])
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Kilépés (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'nav-link btn btn-link logout']
                 )
                 . Html::endForm()
