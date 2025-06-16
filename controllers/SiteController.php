@@ -145,7 +145,7 @@ class SiteController extends Controller
     public function actionNewWorkstation()
     {
         $model = new Workstation();
-        if ($model->load(Yii::$app->request->post())) {  // && $model->validate()
+        if ($model->load(Yii::$app->request->post())) {
             $model->processPost(Yii::$app->request->post());
             if ($model->saveWorkstation()) {
                 return $this->actionManageData();

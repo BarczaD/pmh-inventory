@@ -5,11 +5,6 @@ use yii\helpers\Html;
 use yii\jui\DatePicker;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use app\models\Brand;
-use app\models\Colleague;
-use app\models\Cpu;
-use app\models\Monitor;
-use app\models\Office;
 
 /** @var yii\web\View $this */
 /** @var app\models\Workstation $model */
@@ -56,12 +51,9 @@ date_default_timezone_set("Europe/Budapest");
 
         <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
 
-
-
         <div class="form-group">
             <?= Html::submitButton('Beküldés', ['class' => 'btn btn-success']) ?>
         </div>
-
 
         <?php ActiveForm::end(); ?>
 

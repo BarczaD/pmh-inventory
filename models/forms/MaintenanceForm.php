@@ -11,17 +11,4 @@ class MaintenanceForm extends Model
     public $hardware;
     public $software;
     public $description;
-
-    public function rules()
-    {
-        return [
-            [['date', 'workstation_id', 'hardware', 'software'], 'required'],
-        ];
-    }
-
-    public function saveMaintenance()
-    {
-
-    }
-
 }
