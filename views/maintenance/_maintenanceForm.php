@@ -46,7 +46,8 @@ date_default_timezone_set("Europe/Budapest");
         </div>
 
         <div class="cold-lg-8 mb-7">
-            <?= $form->field($model, 'date')->widget(DatePicker::className(), ['name'=> 'Dátum', 'clientOptions' => ['defaultDate' => 20 . date("yyyy-mm-dd")]]) ?>
+            <label for="date">Dátum:</label>
+            <input type="date" id="date" name="date">
         </div>
 
         <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
