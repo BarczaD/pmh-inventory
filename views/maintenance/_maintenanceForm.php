@@ -9,7 +9,6 @@ use yii\helpers\ArrayHelper;
 /** @var yii\web\View $this */
 /** @var app\models\Workstation $model */
 /** @var yii\widgets\ActiveForm $form */
-date_default_timezone_set("Europe/Budapest");
 
 ?>
 

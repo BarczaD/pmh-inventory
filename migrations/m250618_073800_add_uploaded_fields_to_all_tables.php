@@ -10,7 +10,6 @@ class m250618_073800_add_uploaded_fields_to_all_tables extends Migration
         $tables = $db->schema->getTableNames();
 
         foreach ($tables as $table) {
-            // Skip system/internal tables, if any
             if ($table === 'migration') {
                 continue;
             }

@@ -132,7 +132,7 @@ echo \app\widgets\ModularModal::widget();
 
 
             <div class="form-group">
-                <label class="form-label" for="workstation-monitor_id1">1. Monitor</label>
+                <label class="form-label" for="workstation-monitor_id1">2. Monitor</label>
                 <div class="d-flex align-items-center gap-2">
                     <?= Html::activeDropDownList(
                         $model,

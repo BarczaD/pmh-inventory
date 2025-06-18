@@ -13,6 +13,14 @@ class MaintenanceController extends Controller
         return Maintenance::getMaintenances();
     }
 
+    public static function processNewMaintenance($post) {
+
+        $model = new Maintenance();
+        $model->processPost($post);
+
+        return $model->saveMaintenance();
+    }
+
     public function actionCreate()
     {
         $model = new Maintenance();
