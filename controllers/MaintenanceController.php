@@ -16,7 +16,9 @@ class MaintenanceController extends Controller
     public static function processNewMaintenance($post) {
 
         $model = new Maintenance();
-        $model->processPost($post);
+        if (!$model->processPost($post)) {
+            return false;
+        }
 
         return $model->saveMaintenance();
     }

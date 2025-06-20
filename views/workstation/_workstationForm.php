@@ -1,5 +1,7 @@
 <?php
 
+use yii\debug\controllers\UserController;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -8,10 +10,12 @@ use app\models\Colleague;
 use app\models\Cpu;
 use app\models\Monitor;
 use app\models\Office;
+use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
 /** @var app\models\Workstation $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var \yii\data\ActiveDataProvider $maintenanceProvider */
 
 echo \app\widgets\ModularModal::widget();
 ?>
@@ -181,6 +185,78 @@ echo \app\widgets\ModularModal::widget();
             }
             ?>
         </div>
+
+        <?php
+            if (Yii::$app->request->get('id')) {
+                ?>
+
+                <?php Pjax::begin(); ?>
+
+                <?= GridView::widget([
+                    'dataProvider' => $maintenanceProvider,
+                    'columns' => [
+                        [
+                            'label' => 'Feltöltötte',
+                            'value' => fn($model) => \app\controllers\UserController::getUser($model->uploaded_by) ?? '-',
+                        ],
+                        [
+                            'label' => 'Dátum',
+                            'value' => fn($model) => $model->date ?? '-',
+                        ],
+                        [
+                            'label' => 'Hardware',
+
+                            'value' => function($model) {
+                                if ($model->hardware == 1) {
+                                    return "<i class=\"bi bi-check-lg\"></i>";
+                                }
+
+                                return "<i class=\"bi bi-x\"></i>";
+                            },
+                        ],
+                        [
+                            'label' => 'Software',
+
+                            'value' => function($model) {
+                                if ($model->software == 1) {
+                                    return "<i class=\"bi bi-check-lg\"></i>";
+                                }
+
+                                return "<i class=\"bi bi-x\"></i>";
+                            },
+                        ],
+                        [
+                            'label' => 'Leírás',
+                            'value' => fn($model) => $model->description ?? '-',
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{update}',
+                            'buttons' => [
+                                'update' => function ($url, $model) {
+                                    return Html::a(
+                                        '<i class="bi bi-pencil-square"></i>', ['maintenance/update', 'id' => $model->id],
+                                        [
+                                            'class' => 'btn btn-sm btn-outline-primary',
+                                            'title' => 'Módosítás',
+                                            'data' => [
+                                                'method' => 'get',
+                                                'pjax' => '1',
+                                            ],
+                                        ]
+                                    );
+                                },
+                            ],
+                        ],
+                    ],
+                ]); ?>
+
+                <?php Pjax::end(); ?>
+
+        <?php
+            }
+
+        ?>
 
 
 

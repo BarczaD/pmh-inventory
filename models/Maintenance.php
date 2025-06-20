@@ -55,9 +55,11 @@ class Maintenance extends ActiveRecord implements IdentityInterface
             $this->workstation_id = $post['workstation_id'];
             $this->hardware = intval($post['hardware']);
             $this->software = intval($post['software']);
-            $this->description = $post['description'] != "" ? $post['description'] : null;
+            $this->description = $post['description'] != "" ? $post['description'] : "Nincs";
             $this->uploaded_by = Yii::$app->user->id;
-            $this->upload_date = date("Y-m-d h:m:s");
+
+            date_default_timezone_set('Europe/Budapest');
+            $this->upload_date = date("Y-m-d h:i:s");
 
             return true;
         } catch (\Exception $ex) {
