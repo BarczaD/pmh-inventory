@@ -19,6 +19,11 @@ class Maintenance extends ActiveRecord implements IdentityInterface
         return static::find()->with();
     }
 
+    public static function getMaintenancesOfWorkstation($id)
+    {
+        return static::find()->where(['workstation_id' => $id])->with();
+    }
+
     public function rules()
     {
         return [

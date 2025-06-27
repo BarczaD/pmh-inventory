@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 $this->title = 'Munkaállomás Módosítása';
 /** @var $model */
+/** @var $maintenanceProvider */
 ?>
 
 
@@ -12,5 +13,6 @@ $this->title = 'Munkaállomás Módosítása';
 
     <?= $this->render('_workstationForm', [
         'model' => $model,
+        'maintenanceProvider' => $maintenanceProvider,
     ]) ?>
 </div>

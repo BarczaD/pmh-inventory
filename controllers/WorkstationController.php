@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Maintenance;
 use app\models\Workstation;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\db\QueryInterface;
 
@@ -41,9 +43,18 @@ class WorkstationController extends Controller implements QueryInterface
             $this->redirect(["site/manage-data"]);
         }
 
+
+        $maintenanceProvider = new ActiveDataProvider([
+            'query' => Maintenance::getMaintenancesOfWorkstation($model->getId()),
+            'pagination' => [],
+            'sort' => ["defaultOrder" => ["id" => SORT_DESC]],
+        ]);
+
         return $this->render('update', [
             'model' => $model,
+            'maintenanceProvider' => $maintenanceProvider,
         ]);
+
     }
 
     public function actionDelete($id)

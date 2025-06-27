@@ -197,7 +197,7 @@ echo \app\widgets\ModularModal::widget();
                     'columns' => [
                         [
                             'label' => 'Feltöltötte',
-                            'value' => fn($model) => \app\controllers\UserController::getUser($model->uploaded_by) ?? '-',
+                            'value' => fn($model) => \app\controllers\UserController::getUser($model->uploaded_by)->username ?? '-',
                         ],
                         [
                             'label' => 'Dátum',
