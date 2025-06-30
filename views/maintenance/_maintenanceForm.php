@@ -43,7 +43,6 @@ use yii\helpers\ArrayHelper;
         </div>
 
         <?= $form->field($model, 'date', [
-            // This targets the surrounding <div> container
             'options' => ['class' => 'col-lg-4 mb-5']
         ])->textInput(['type' => 'date'])->label('Dátum:') ?>
 
