@@ -189,11 +189,12 @@ echo \app\widgets\ModularModal::widget();
         <?php
             if (Yii::$app->request->get('id')) {
                 ?>
+                <h2>Karbantartások</h2>
 
-                <?php Pjax::begin(); ?>
+
 
                 <?= GridView::widget([
-                    'dataProvider' => $maintenanceProvider,
+                    'dataProvider' => \app\controllers\MaintenanceController::getMaintenancesForWorkstationIdAsProvider($model->getId()),
                     'columns' => [
                         [
                             'label' => 'Feltöltötte',
@@ -205,25 +206,25 @@ echo \app\widgets\ModularModal::widget();
                         ],
                         [
                             'label' => 'Hardware',
-
+                            'format' => 'raw',
                             'value' => function($model) {
                                 if ($model->hardware == 1) {
                                     return "<i class=\"bi bi-check-lg\"></i>";
                                 }
-
                                 return "<i class=\"bi bi-x\"></i>";
                             },
+                            'contentOptions' => ['class' => 'text-center'],
                         ],
                         [
                             'label' => 'Software',
-
+                            'format' => 'raw',
                             'value' => function($model) {
                                 if ($model->software == 1) {
                                     return "<i class=\"bi bi-check-lg\"></i>";
                                 }
-
                                 return "<i class=\"bi bi-x\"></i>";
                             },
+                            'contentOptions' => ['class' => 'text-center'],
                         ],
                         [
                             'label' => 'Leírás',
@@ -240,7 +241,7 @@ echo \app\widgets\ModularModal::widget();
                                             'class' => 'btn btn-sm btn-outline-primary',
                                             'title' => 'Módosítás',
                                             'data' => [
-                                                'method' => 'get',
+                                                'method' => 'post',
                                                 'pjax' => '1',
                                             ],
                                         ]
@@ -251,7 +252,7 @@ echo \app\widgets\ModularModal::widget();
                     ],
                 ]); ?>
 
-                <?php Pjax::end(); ?>
+
 
         <?php
             }

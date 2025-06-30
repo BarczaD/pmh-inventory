@@ -35,24 +35,16 @@ class WorkstationController extends Controller implements QueryInterface
 
         if (!$model) {
             Yii::$app->session->setFlash('error', 'Munkaállomás nem található.');
-            $this->redirect(["site/manage-data"]);
+            return $this->redirect(["site/manage-data"]);
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Munkaállomás sikeresen frissítve.');
-            $this->redirect(["site/manage-data"]);
+            return $this->redirect(["site/manage-data"]);
         }
-
-
-        $maintenanceProvider = new ActiveDataProvider([
-            'query' => Maintenance::getMaintenancesOfWorkstation($model->getId()),
-            'pagination' => [],
-            'sort' => ["defaultOrder" => ["id" => SORT_DESC]],
-        ]);
 
         return $this->render('update', [
             'model' => $model,
-            'maintenanceProvider' => $maintenanceProvider,
         ]);
 
     }

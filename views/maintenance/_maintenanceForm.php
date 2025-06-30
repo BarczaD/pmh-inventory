@@ -32,22 +32,20 @@ use yii\helpers\ArrayHelper;
         <div class="col-lg-6 mb-5">
             <div class="form-group">
                 <?= $form->field($model, 'hardware')->checkbox([
-                    'checked' => false,
                     'uncheck' => 0,
                     'label' => 'Hardware',
                 ]) ?>
                 <?= $form->field($model, 'software')->checkbox([
-                    'checked' => false,
                     'uncheck' => 0,
                     'label' => 'Software',
                 ]) ?>
             </div>
         </div>
 
-        <div class="cold-lg-8 mb-7">
-            <label for="date">Dátum:</label>
-            <input type="date" id="date" name="date">
-        </div>
+        <?= $form->field($model, 'date', [
+            // This targets the surrounding <div> container
+            'options' => ['class' => 'col-lg-4 mb-5']
+        ])->textInput(['type' => 'date'])->label('Dátum:') ?>
 
         <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
 
