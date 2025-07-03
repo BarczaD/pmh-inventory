@@ -12,18 +12,22 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Congratulations!</h1>
+        <h1 class="display-4">IT Leltár</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p class="lead">Hódmezővásárhely Megyei Jogú Város Polgármesteri Hivatalának és Önkormányzatának informatikai leltára.</p>
 
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
+        <p>
+            <a class="btn btn-lg btn-success" href="index.php?r=site%2Fnew-workstation">Új munkaállomás felvétele!</a>
+            <a class="btn btn-lg btn-success" href="index.php?r=site%2Fnew-maintenance">Új karbantartás felvétele!</a>
+            <a class="btn btn-lg btn-success" href="index.php?r=site%2Fmanage-data">Ugrás az adatokhoz!</a>
+        </p>
     </div>
 
     <div class="body-content">
 
         <div class="row">
             <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
+                <h2>Diagram helye</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
                     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
@@ -31,7 +35,7 @@ $this->title = 'My Yii Application';
                     fugiat nulla pariatur.</p>
             </div>
             <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
+                <h2>Diagram helye</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
                     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
@@ -39,7 +43,7 @@ $this->title = 'My Yii Application';
                     fugiat nulla pariatur.</p>
             </div>
             <div class="col-lg-4">
-                <h2>Heading</h2>
+                <h2>Diagram helye</h2>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
                     dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
@@ -47,29 +51,5 @@ $this->title = 'My Yii Application';
                     fugiat nulla pariatur.</p>
             </div>
         </div>
-        <?php
-        echo Html::a('Iroda hozzáadása gomb', ['office/create'], [
-            'class' => 'btn btn-primary',
-            'data-toggle' => 'universal-modal',
-        ]);
-        echo Html::a('CPU hozzáadása gomb', ['cpu/create'], [
-            'class' => 'btn btn-primary',
-            'data-toggle' => 'universal-modal',
-        ]);
-        echo Html::a('Monitor hozzáadása gomb', ['monitor/create'], [
-            'class' => 'btn btn-primary',
-            'data-toggle' => 'universal-modal',
-        ]);
-        echo Html::a('Brand hozzáadása gomb', ['brand/create'], [
-            'class' => 'btn btn-primary',
-            'data-toggle' => 'universal-modal',
-        ]);
-        echo Html::a('Kolléga hozzáadása gomb', ['colleague/create'], [
-            'class' => 'btn btn-primary',
-            'data-toggle' => 'universal-modal',
-        ]);
-
-        ?>
-
     </div>
 </div>
