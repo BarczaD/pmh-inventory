@@ -60,6 +60,20 @@ class MaintenanceController extends Controller
 
     }
 
+    public function actionDelete($id)
+    {
+        $model = Maintenance::findOne($id);
+
+        if ($model !== null) {
+            $model->delete();
+            Yii::$app->session->setFlash('success', 'A karbantartás sikeresen törölve.');
+        } else {
+            Yii::$app->session->setFlash('error', 'A karbantartás nem található.');
+        }
+
+        return $this->redirect(['site/manage-data']);
+    }
+
     public static function getMaintenancesForWorkstationIdAsProvider($id)
     {
         return new ActiveDataProvider([

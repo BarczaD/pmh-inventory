@@ -181,7 +181,7 @@ echo \app\widgets\ModularModal::widget();
                             'method' => 'post',
                         ],
                     ]
-                ) ;
+                );
             }
             ?>
         </div>
