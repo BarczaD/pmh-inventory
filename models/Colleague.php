@@ -58,6 +58,12 @@ class Colleague extends ActiveRecord implements IdentityInterface
         return static::find()->with();
     }
 
+    public function getColleague()
+    {
+        return $this->hasOne(Colleague::class, ['id' => 'colleague_id']);
+    }
+
+
     public static function deleteColleague($id)
     {
         $transaction = Yii::$app->db->beginTransaction();

@@ -178,11 +178,41 @@ class SiteController extends Controller
 
     public function actionManageData()
     {
-        $workstationProvider = new ActiveDataProvider([
-            'query' => WorkstationController::getWorkstations(),
-            'pagination' => [],
-            'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
-        ]);
+
+        $hostname = null;
+        $colleagueName = null;
+        $searchOffice = null;
+
+        if (Yii::$app->request->get('hostname') || Yii::$app->request->get('searchColleague') || Yii::$app->request->get('searchOffice')) {
+            $hostname = Yii::$app->request->get('hostname');
+            $colleagueName = Yii::$app->request->get('searchColleague');
+            $searchOffice = Yii::$app->request->get('searchOffice');
+
+            $query = Workstation::find()->joinWith('colleague')->joinWith('office');
+
+            if ($hostname) {
+                $query->andFilterWhere(['like', 'hostname', $hostname]);
+            }
+
+            if ($colleagueName) {
+                $query->andFilterWhere(['like', 'colleague.name', $colleagueName]);
+            }
+
+            if ($searchOffice) {
+                $query->andFilterWhere(['like', 'office.name', $searchOffice]);
+            }
+
+            $workstationProvider = new ActiveDataProvider([
+                'query' => $query,
+                'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
+            ]);
+        } else {
+            $workstationProvider = new ActiveDataProvider([
+                'query' => WorkstationController::getWorkstations(),
+                'pagination' => [],
+                'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
+            ]);
+        }
 
         $cpuProvider = new ActiveDataProvider([
            'query' => CpuController::getCpus(),
@@ -220,6 +250,9 @@ class SiteController extends Controller
             'officeProvider' => $officeProvider,
             'colleagueProvider' => $colleagueProvider,
             'brandProvider' => $brandProvider,
+            'searchHostname' => $hostname,
+            'searchColleague' => $colleagueName,
+            'searchOffice' => $searchOffice,
         ]);
     }
 }
