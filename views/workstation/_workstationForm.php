@@ -26,6 +26,10 @@ echo \app\widgets\ModularModal::widget();
 
     <div class="row">
         <div class="col-lg-4 mb-3">
+            <?= $form->field($model, 'uploaded_by')->hiddenInput(['value' => Yii::$app->user->id])->label(false) ?>
+            <?= $form->field($model, 'upload_date')->hiddenInput(['value' => date('Y-m-d')])->label(false) ?>
+
+
             <?= $form->field($model, 'hostname')->textInput(['maxlength' => true]) ?>
 
             <div class="form-group">
@@ -167,6 +171,14 @@ echo \app\widgets\ModularModal::widget();
 
         <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
 
+        <?php
+        if ($model->getId()) {
+        ?>
+        <p>Feltöltötte: <?= \app\controllers\UserController::getUser($model->uploaded_by) ?></p>
+
+        <?php
+        }
+        ?>
         <div class="form-group">
             <?= Html::submitButton('Beküldés', ['class' => 'btn btn-success']) ?>
             <?php
