@@ -8,6 +8,8 @@ use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+
+
     public function rules()
     {
         return [
@@ -111,6 +113,11 @@ class User extends ActiveRecord implements IdentityInterface
 
             return false;
         }
+    }
+
+    public static function getAllUsers()
+    {
+        return static::find()->with();
     }
 
 }
