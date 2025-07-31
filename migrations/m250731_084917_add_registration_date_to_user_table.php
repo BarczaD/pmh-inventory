@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m250729_071027_add_deactivated_field_to_user extends Migration
+class m250731_084917_add_registration_date_to_user_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -12,11 +12,9 @@ class m250729_071027_add_deactivated_field_to_user extends Migration
         $db = Yii::$app->db;
         $schema = $db->schema->getTableSchema("{{user}}");
 
-        if (!isset($schema->columns['deactivated'])) {
-            $this->addColumn("{{user}}", 'deactivated', $this->boolean()->notNull()->defaultValue(0));
+        if (!isset($schema->columns['registration_date'])) {
+            $this->addColumn("user", 'registration_date', $this->dateTime()->null()->after('username'));
         }
-
-        $this->update('user', ['deactivated' => 0]);
 
         return true;
     }
@@ -26,10 +24,10 @@ class m250729_071027_add_deactivated_field_to_user extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('user', 'deactivated');
-    }
-}
+        $this->dropColumn('user', 'registration_date');
 
+        return true;
+    }
 
     /*
     // Use up()/down() to run migration code without a transaction.
@@ -40,9 +38,9 @@ class m250729_071027_add_deactivated_field_to_user extends Migration
 
     public function down()
     {
-        echo "m250729_071027_add_deactivated_field_to_user cannot be reverted.\n";
+        echo "m250731_084917_add_registration_date_to_user_table cannot be reverted.\n";
 
         return false;
     }
     */
-
+}

@@ -120,4 +120,27 @@ class User extends ActiveRecord implements IdentityInterface
         return static::find()->with();
     }
 
+    public function changeDeactivationState()
+    {
+        $this->deactivated = !$this->deactivated;
+    }
+
+    public static function deactivateUser($id)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $user = self::findOne($id);
+            $user->changeDeactivationState();
+            if ($user->save()) {
+                $transaction->commit();
+                return true;
+            }
+            return false;
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+
+    }
+
 }
