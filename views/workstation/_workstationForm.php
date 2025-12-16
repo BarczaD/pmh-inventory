@@ -1,5 +1,8 @@
 <?php
 
+use app\controllers\MaintenanceController;
+use app\widgets\ModularModal;
+use yii\data\ActiveDataProvider;
 use yii\debug\controllers\UserController;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -15,9 +18,9 @@ use yii\widgets\Pjax;
 /** @var yii\web\View $this */
 /** @var app\models\Workstation $model */
 /** @var yii\widgets\ActiveForm $form */
-/** @var \yii\data\ActiveDataProvider $maintenanceProvider */
+/** @var ActiveDataProvider $maintenanceProvider */
 
-echo \app\widgets\ModularModal::widget();
+echo ModularModal::widget();
 ?>
 
 <div class="workstation-form">
@@ -55,8 +58,8 @@ echo \app\widgets\ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'cpu_id',
-                        \yii\helpers\ArrayHelper::map(
-                            \app\models\Cpu::find()->all(),
+                        ArrayHelper::map(
+                            Cpu::find()->all(),
                             'id',
                             function ($cpu) {
                                 return "{$cpu->brand} {$cpu->model}";
@@ -121,8 +124,8 @@ echo \app\widgets\ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'monitor_id1',
-                        \yii\helpers\ArrayHelper::map(
-                            \app\models\Monitor::find()->all(),
+                        ArrayHelper::map(
+                            Monitor::find()->all(),
                             'id',
                             function ($monitor) {
                                 return "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})";
@@ -145,8 +148,8 @@ echo \app\widgets\ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'monitor_id2',
-                        \yii\helpers\ArrayHelper::map(
-                            \app\models\Monitor::find()->all(),
+                        ArrayHelper::map(
+                            Monitor::find()->all(),
                             'id',
                             function ($monitor) {
                                 return "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})";
@@ -164,6 +167,8 @@ echo \app\widgets\ModularModal::widget();
 
         </div>
 
+
+        <?= $form->field($model, 'anydesk_code')->textInput(['maxlength' => true])->label("AnyDesk Kód") ?>
 
         <?= $form->field($model, 'ms_office_license')->textInput(['maxlength' => true])->label("Office Licensz kulcs") ?>
 
@@ -206,7 +211,7 @@ echo \app\widgets\ModularModal::widget();
 
 
                 <?= GridView::widget([
-                    'dataProvider' => \app\controllers\MaintenanceController::getMaintenancesForWorkstationIdAsProvider($model->getId()),
+                    'dataProvider' => MaintenanceController::getMaintenancesForWorkstationIdAsProvider($model->getId()),
                     'columns' => [
                         [
                             'label' => 'Feltöltötte',

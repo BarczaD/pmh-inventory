@@ -20,6 +20,7 @@ class WorkstationForm extends Model
     public $office_id;
     public $monitor_id1;
     public $monitor_id2;
+    public $anydesk_code;
     public $ms_office_license;
     public $software_list;
     public $description;

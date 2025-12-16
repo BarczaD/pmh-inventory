@@ -22,7 +22,7 @@ class Workstation extends ActiveRecord implements IdentityInterface
         return [
             [['hostname', 'brand_id', 'cpu_id', 'ram', 'os'], 'required'],
             [['brand_id', 'cpu_id', 'colleague_id', 'office_id', 'monitor_id1', 'monitor_id2'], 'integer'],
-            [['software_list', 'description'], 'string'],
+            [['software_list', 'description', 'anydesk_code'], 'string'],
             [['ms_office_license'], 'string'],
             [['hostname', 'os'], 'string', 'max' => 255],
         ];
@@ -78,16 +78,24 @@ class Workstation extends ActiveRecord implements IdentityInterface
         return $this->hasOne(Office::class, ['id' => 'office_id']);
     }
 
+    public function getAnydeskCode()
+    {
+        return $this->attributes['anydesk_code'];
+    }
+
     public function saveWorkstation()
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            if (!$this->save(false)) {
+
+            if (!$this->save()) {
                 throw new \Exception("DB hiba: nem sikerült rögzíteni a munkaállomást!");
             }
             $transaction->commit();
             return true;
         } catch (\Exception $ex) {
+            var_dump($ex->getMessage());
+            exit();
             $transaction->rollBack();
             Yii::error($ex->getMessage());
             return false;
@@ -105,7 +113,7 @@ class Workstation extends ActiveRecord implements IdentityInterface
             $this->ram = intval($post['ram']);
             $this->os = $post['os'];
             $this->colleague_id = intval($post['colleague_id']);
-            $this->monitor_id1 = intval($post['monitor_id1']);
+            $this->monitor_id1 = $post['monitor_id1'] != "" ? intval($post['monitor_id1']) : null;
             $this->monitor_id2 = $post['monitor_id2'] != "" ? intval($post['monitor_id2']) : null;
             $this->ms_office_license = $post['ms_office_license'];
             $this->software_list = $post['software_list'];
