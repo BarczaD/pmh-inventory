@@ -95,8 +95,6 @@ class Workstation extends ActiveRecord implements IdentityInterface
             return true;
         } catch (\Exception $ex) {
             var_dump($ex->getMessage());
-            exit();
-            $transaction->rollBack();
             Yii::error($ex->getMessage());
             return false;
         }
