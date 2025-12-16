@@ -36,6 +36,7 @@ $this->title = 'Adatok Kezelése';
         <?php Pjax::begin(); ?>
 
         <div class="workstation-search mb-3">
+            <h5>Munkaállomások</h5>
             <?php $form = ActiveForm::begin([
                 'method' => 'get',
                 'action' => ['manage-data'],
@@ -141,6 +142,10 @@ $this->title = 'Adatok Kezelése';
         <div class="mb-3">
             <div class="row">
                 <div class="col-md-3">
+                    <h5>CPU <?php echo Html::a('+', ['cpu/create'], [
+                                'class' => 'btn btn-primary',
+                                'data-toggle' => 'universal-modal',
+                        ]); ?></h5>
                     <?= GridView::widget([
                         'dataProvider' => $cpuProvider,
                         'columns' => [
@@ -173,6 +178,10 @@ $this->title = 'Adatok Kezelése';
                     ]); ?>
                 </div>
                 <div class="col-md-3">
+                    <h5>Irodák <?php echo Html::a('+', ['office/create'], [
+                                'class' => 'btn btn-primary',
+                                'data-toggle' => 'universal-modal',
+                        ]); ?></h5>
                     <?= GridView::widget([
                         'dataProvider' => $officeProvider,
                         'columns' => [
@@ -201,6 +210,10 @@ $this->title = 'Adatok Kezelése';
                     ]); ?>
                 </div>
                 <div class="col-md-3">
+                    <h5>Brandek <?php echo Html::a('+', ['brand/create'], [
+                                'class' => 'btn btn-primary',
+                                'data-toggle' => 'universal-modal',
+                        ]); ?></h5>
                     <?= GridView::widget([
                         'dataProvider' => $brandProvider,
                         'columns' => [
@@ -231,6 +244,10 @@ $this->title = 'Adatok Kezelése';
                     ?>
                 </div>
                 <div class="col-md-3">
+                    <h5>Monitorok <?php echo Html::a('+', ['monitor/create'], [
+                                'class' => 'btn btn-primary',
+                                'data-toggle' => 'universal-modal',
+                        ]); ?></h5>
                     <?= GridView::widget([
                         'dataProvider' => $monitorProvider,
                         'columns' => [
@@ -273,6 +290,10 @@ $this->title = 'Adatok Kezelése';
                 </div>
             </div>
             <div class="row">
+                <h5>Kollégák <?php echo Html::a('+', ['colleague/create'], [
+                            'class' => 'btn btn-primary',
+                            'data-toggle' => 'universal-modal',
+                    ]); ?></h5>
                 <?= GridView::widget([
                     'dataProvider' => $colleagueProvider,
                     'columns' => [
@@ -344,6 +365,7 @@ $this->title = 'Adatok Kezelése';
         </div>
 
         <?php
+        /*
         echo Html::a('Iroda hozzáadása gomb', ['office/create'], [
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
@@ -364,7 +386,7 @@ $this->title = 'Adatok Kezelése';
             'class' => 'btn btn-primary',
             'data-toggle' => 'universal-modal',
         ]);
-
+        */
         ?>
 
     </div>

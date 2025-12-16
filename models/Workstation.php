@@ -88,6 +88,9 @@ class Workstation extends ActiveRecord implements IdentityInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
 
+            $this->uploaded_by = Yii::$app->user->id;
+            date_default_timezone_set('Europe/Budapest');
+            $this->upload_date = date("Y-m-d h:i:s");
             if (!$this->save()) {
                 throw new \Exception("DB hiba: nem sikerült rögzíteni a munkaállomást!");
             }

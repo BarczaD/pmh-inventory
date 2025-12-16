@@ -179,7 +179,7 @@ echo ModularModal::widget();
         <?php
         if ($model->getId()) {
         ?>
-        <p>Feltöltötte: <?= \app\controllers\UserController::getUser($model->uploaded_by) ?></p>
+        <p>Feltöltötte: <?= \app\controllers\UserController::getUser($model->uploaded_by)->username ?></p>
 
         <?php
         }
