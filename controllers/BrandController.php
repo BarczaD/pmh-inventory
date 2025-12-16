@@ -17,7 +17,11 @@ class BrandController extends Controller
     {
         $model = new Brand();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->uploaded_by = Yii::$app->user->id;
+            date_default_timezone_set('Europe/Budapest');
+            $model->upload_date = date("Y-m-d h:i:s");
+            $model->save();
             return 'success';
         }
 

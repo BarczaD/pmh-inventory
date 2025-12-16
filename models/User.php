@@ -100,6 +100,9 @@ class User extends ActiveRecord implements IdentityInterface
             $this->auth_key = Yii::$app->security->generateRandomString();
             $this->access_token = Yii::$app->security->generateRandomString();
 
+            date_default_timezone_set('Europe/Budapest');
+            $this->registration_date = date("Y-m-d h:i:s");
+
             if (!$this->save(false)) {
                 throw new \Exception('Nem sikerült létrehozni a felhasználót.');
             }

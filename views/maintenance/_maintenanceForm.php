@@ -42,9 +42,11 @@ use yii\helpers\ArrayHelper;
             </div>
         </div>
 
-        <?= $form->field($model, 'date', [
+        <!--?= $form->field($model, 'date', [
             'options' => ['class' => 'col-lg-4 mb-5']
-        ])->textInput(['type' => 'date'])->label('Dátum:') ?>
+        ])->textInput(['type' => 'date'])->label('Dátum:') -->
+        <?= $form->field($model, 'date')->input('date') ?>
+
 
         <?= $form->field($model, 'description')->textarea(['rows' => 3])->label("Egyéb leírás") ?>
 

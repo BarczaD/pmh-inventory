@@ -21,6 +21,11 @@ class MaintenanceController extends Controller
             return false;
         }
 
+        $model->uploaded_by = Yii::$app->user->id;
+        date_default_timezone_set('Europe/Budapest');
+        $model->upload_date = date("Y-m-d h:i:s");
+        var_dump($model);;
+        exit();
         return $model->saveMaintenance();
     }
 

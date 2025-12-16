@@ -1,5 +1,6 @@
 <?php
 
+use app\models\User;
 use yii\db\Migration;
 
 class m250714_122358_add_default_admin_user extends Migration
@@ -9,7 +10,16 @@ class m250714_122358_add_default_admin_user extends Migration
      */
     public function safeUp()
     {
-        return true;
+        $transaction = $this->getDb()->beginTransaction();
+        try {
+            $user = new User();
+            $user->username = 'admin';
+            $user->password = 'admin';
+            $user->signup();
+        } catch (\yii\db\Exception $e) {
+            $transaction->rollBack();
+            echo $e->getMessage();
+        }
     }
 
     /**
