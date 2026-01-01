@@ -111,8 +111,8 @@ $this->title = 'Adatok Kezelése';
                     },
                 ],
                 [
-                    'label' => 'Leírás',
-                    'value' => fn($model) => $model->description ?? '-',
+                    'label' => 'AnyDesk kód',
+                    'value' => fn($model) => $model->anydesk_code ?? '-',
                 ],
                 [
                     'class' => 'yii\grid\ActionColumn',

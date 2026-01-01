@@ -148,4 +148,32 @@ class WorkstationController extends Controller implements QueryInterface
     {
         // TODO: Implement emulateExecution() method.
     }
+
+    public function actionNetworkStatus()
+    {
+        /*
+        $models = Workstation::find()->select(['hostname'])->all();
+
+        $online = 0;
+        $offline = 0;
+
+        foreach ($models as $model) {
+            $host = escapeshellarg($model->hostname);
+
+            exec("ping -n 1 -w 500 $host", $output, $result);
+
+            if ($result === 0) {
+                $online++;
+            } else {
+                $offline++;
+            }
+        }
+
+        return $this->render('network-status', [
+            'online' => $online,
+            'offline' => $offline,
+        ]);
+        */
+        //TODO
+    }
 }
