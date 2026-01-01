@@ -342,7 +342,7 @@ $this->title = 'Adatok Kezelése';
                             'buttons' => [
                                 'toggle-archive' => function ($url, $model) {
                                     $icon = $model->archived ? 'bi bi-box-arrow-in-down' : 'bi bi-box-arrow-up';
-                                    $label = $model->archived ? 'Visszaállítás' : 'Archiválás';
+                                    $label = $model->archived == 1 ? 'Visszaállítás' : 'Archiválás';
 
                                     return Html::a(
                                         "<i class='$icon'></i> $label",

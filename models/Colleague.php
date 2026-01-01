@@ -82,8 +82,8 @@ class Colleague extends ActiveRecord implements IdentityInterface
 
     public function toggleArchive()
     {
-        $this->archived = !$this->archived;
-        return $this->save(false);
+        $newValue = ($this->archived == 1) ? 0 : 1;
+        return $this->updateAttributes(['archived' => $newValue]);
     }
 
 }

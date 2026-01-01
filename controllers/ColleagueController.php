@@ -48,7 +48,7 @@ class ColleagueController extends Controller implements QueryInterface
     {
         $model = Colleague::findOne($id);
 
-        if ($model !== null) {
+        if ($model) {
             $model->toggleArchive();
             Yii::$app->session->setFlash('success', $model->name . ' állapota sikeresen megváltoztatva.');
         } else {
