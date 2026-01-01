@@ -17,7 +17,7 @@ class MaintenanceController extends Controller
     public static function processNewMaintenance($post) {
 
         $model = new Maintenance();
-        if (!$model->processPost($post)) {
+        if (!$model->processPost(Yii::$app->request->post())) {
             return false;
         }
 

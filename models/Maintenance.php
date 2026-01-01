@@ -54,8 +54,9 @@ class Maintenance extends ActiveRecord implements IdentityInterface
     public function processPost($post)
     {
         try {
-            $this->date = $post['date'];
+
             $post = $post['Maintenance'];
+            $this->date = $post['date'];
 
             $this->workstation_id = $post['workstation_id'];
             $this->hardware = intval($post['hardware']);

@@ -52,17 +52,19 @@ use yii\helpers\ArrayHelper;
 
         <div class="form-group">
             <?= Html::submitButton('Beküldés', ['class' => 'btn btn-success']) ?>
-            <?= Html::a(
-                'Karbantartás törlése',
-                ['delete', 'id' => $model->id],
-                [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Biztosan törlöd ezt a karbantartást?',
-                        'method' => 'post',
-                    ],
-                ]
-            ); ?>
+            <?php
+            if (Yii::$app->request->get('id'))
+                echo Html::a(
+                    'Karbantartás törlése',
+                    ['delete', 'id' => $model->id],
+                    [
+                        'class' => 'btn btn-danger',
+                        'data' => [
+                            'confirm' => 'Biztosan törlöd ezt a karbantartást?',
+                            'method' => 'post',
+                        ],
+                    ]
+                ); ?>
         </div>
 
         <?php ActiveForm::end(); ?>

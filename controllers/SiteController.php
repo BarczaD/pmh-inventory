@@ -161,9 +161,12 @@ class SiteController extends Controller
     public function actionNewMaintenance()
     {
         $model = new Maintenance();
-
         if ($model->load(Yii::$app->request->post())) {
-            $model = MaintenanceController::processNewMaintenance(Yii::$app->request->post());
+            $model->processPost(Yii::$app->request->post());
+            if ($model->saveMaintenance())
+            {
+                return $this->actionManageData();
+            }
 
             if ($model) {
                 return $this->actionManageData();
