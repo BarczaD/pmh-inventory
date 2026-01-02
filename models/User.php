@@ -146,4 +146,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     }
 
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if ($this->isNewRecord) {
+            return parent::save($runValidation, $attributeNames);
+        }
+
+        if ($runValidation && !$this->validate($attributeNames)) {
+            return false;
+        }
+
+        return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
+    }
+
 }

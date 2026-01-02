@@ -86,4 +86,17 @@ class Colleague extends ActiveRecord implements IdentityInterface
         return $this->updateAttributes(['archived' => $newValue]);
     }
 
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if ($this->isNewRecord) {
+            return parent::save($runValidation, $attributeNames);
+        }
+
+        if ($runValidation && !$this->validate($attributeNames)) {
+            return false;
+        }
+
+        return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
+    }
+
 }
