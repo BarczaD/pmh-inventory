@@ -170,6 +170,8 @@ echo ModularModal::widget();
 
         <?= $form->field($model, 'anydesk_code')->textInput(['maxlength' => true])->label("AnyDesk Kód") ?>
 
+        <?= $form->field($model, 'bitlocker_code')->textInput(['maxlength' => false])->label("BitLocker kód") ?>
+
         <?= $form->field($model, 'ms_office_license')->textInput(['maxlength' => true])->label("Office Licensz kulcs") ?>
 
         <?= $form->field($model, 'software_list')->textarea(['rows' => 3])->label("Szoftverek listája") ?>
