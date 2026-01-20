@@ -22,7 +22,7 @@ class Workstation extends ActiveRecord implements IdentityInterface
         return [
             [['hostname', 'brand_id', 'cpu_id', 'ram', 'os'], 'required'],
             [['brand_id', 'cpu_id', 'colleague_id', 'office_id', 'monitor_id1', 'monitor_id2'], 'integer'],
-            [['software_list', 'description', 'anydesk_code'], 'string'],
+            [['software_list', 'description', 'anydesk_code', 'bitlocker_code'], 'string'],
             [['ms_office_license'], 'string'],
             [['hostname', 'os'], 'string', 'max' => 255],
         ];
@@ -116,6 +116,7 @@ class Workstation extends ActiveRecord implements IdentityInterface
             $this->colleague_id = intval($post['colleague_id']);
             $this->monitor_id1 = $post['monitor_id1'] != "" ? intval($post['monitor_id1']) : null;
             $this->monitor_id2 = $post['monitor_id2'] != "" ? intval($post['monitor_id2']) : null;
+            $this->bitlocker_code = $post['bitlocker_code'];
             $this->ms_office_license = $post['ms_office_license'];
             $this->software_list = $post['software_list'];
             $this->description = $post['description'] != "" ? $post['description'] : null;
