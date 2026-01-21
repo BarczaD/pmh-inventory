@@ -8,10 +8,6 @@ use yii\web\Controller;
 
 class LogController extends Controller
 {
-    const INFO = 1;
-    const ALERT = 2;
-    const WARNING = 3;
-    const ERROR = 4;
 
     public function actionCreate()
     {
@@ -20,6 +16,7 @@ class LogController extends Controller
     public static function logThis(int $event_type, string $event_description)
     {
         $log = new Log();
+        $log->triggered_by = Yii::$app->user->id;
         $log->log_date = date("Y-m-d H:i:s");
         $log->event_type = $event_type;
         $log->event_description = $event_description;
