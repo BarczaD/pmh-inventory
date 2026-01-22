@@ -7,6 +7,8 @@ use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
 use app\models\forms\WorkstationForm;
 use app\models\Maintenance;
+use app\models\forms\PasswordChangeForm;
+use app\models\User;
 use app\models\Workstation;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -144,18 +146,7 @@ class SiteController extends Controller
 
     public function actionNewWorkstation()
     {
-        $model = new Workstation();
-        if ($model->load(Yii::$app->request->post())) {
-            $model->processPost(Yii::$app->request->post());
-            if ($model->saveWorkstation()) {
-                return $this->actionManageData();
-            }
-            return false;
-        }
-
-        return $this->render('new-workstation', [
-            'model' => $model,
-        ]);
+        return $this->redirect(['workstation/create']);
     }
 
     public function actionNewMaintenance()
@@ -256,6 +247,27 @@ class SiteController extends Controller
             'searchHostname' => $hostname,
             'searchColleague' => $colleagueName,
             'searchOffice' => $searchOffice,
+        ]);
+    }
+
+    public function actionChangePassword()
+    {
+        $user = User::findOne(Yii::$app->user->id);
+        if (!$user) {
+            throw new \yii\web\NotFoundHttpException("Felhasználó nem található.");
+        }
+
+        $model = new PasswordChangeForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($user->changePassword($model->new_password)) {
+                Yii::$app->session->setFlash('success', 'Jelszó sikeresen megváltoztatva.');
+                return $this->redirect(["site/manage-data"]);
+            }
+        }
+
+        return $this->render('change-password', [
+            'model' => $model,
         ]);
     }
 }

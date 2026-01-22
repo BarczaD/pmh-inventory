@@ -2,88 +2,30 @@
 
 namespace app\models;
 
-use Yii;
-use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
-
-class Log extends ActiveRecord implements IdentityInterface
+class Log
 {
-
     public static function tableName()
     {
         return 'log';
     }
 
-    public static function getLogs()
-    {
-        return Brand::find()->with();
-    }
-
-    public static function deleteLog($id)
-    {
-        $transaction = Yii::$app->db->beginTransaction();
-        $model = static::findOne($id);
-        if ($model) {
-            try {
-                $model->delete();
-                $transaction->commit();
-                return true;
-            } catch (\Throwable $th) {
-                $transaction->rollBack();
-                throw $th;
-            }
-        }
-    }
-
-
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['name'], 'string', 'max' => 255],
+            [['log_date', 'alert_level', 'event_type', 'event_description', 'triggered_by'], 'required'],
+            [['event_description'], 'string', 'max' => 255],
+            [['log_date', 'alert_level', 'event_type', 'triggered_by'], 'integer'],
         ];
     }
 
-    public static function findIdentity($id)
+    public function afterSave($insert, $changedAttributes)
     {
-        return static::findOne($id);
-    }
+        parent::afterSave($insert, $changedAttributes);
 
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        return static::findOne(['access_token' => $token]);
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    public function validateAuthKey($authKey)
-    {
-        return $this->getAuthKey() === $authKey;
-    }
-
-    public static function findByName($name)
-    {
-        return static::findOne(['name' => $name]);
-    }
-
-    public function save($runValidation = true, $attributeNames = null)
-    {
-        if ($this->isNewRecord) {
-            return parent::save($runValidation, $attributeNames);
-        }
-
-        if ($runValidation && !$this->validate($attributeNames)) {
-            return false;
-        }
-
-        return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
+        $log = new Log();
+        $log->event_type = $insert ? LogEvent::COLLEAGUE_CREATE : LogEvent::COLLEAGUE_UPDATE;
+        $log->triggered_by = Yii::$app->user->id;
+        $log->event_description = "Név: {$this->name} (ID: {$this->id})";
+        $log->save(false);
     }
 }

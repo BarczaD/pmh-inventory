@@ -159,4 +159,30 @@ class User extends ActiveRecord implements IdentityInterface
         return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
     }
 
+    public function changePassword($newPassword)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $this->password = Yii::$app->security->generatePasswordHash($newPassword);
+            $this->save(false);
+            $transaction->commit();
+            return true;
+        } catch (\Throwable $th) {
+            $transaction->rollBack();
+            return false;
+        }
+    }
+
+    public function changeUserState()
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $this->deactivated = !$this->deactivated;
+            $this->save();
+            $transaction->commit(false);
+        } catch (\Throwable $th) {
+            $transaction->rollBack();
+            throw $th;
+        }
+    }
 }

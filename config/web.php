@@ -35,7 +35,15 @@ $config = [
             'useFileTransport' => true,
         ],
         'db' => $db,
-
+        'log' => [
+            'targets' => [
+                [
+                    'class' => 'yii\log\DbTarget',
+                    'levels' => ['error', 'warning', 'info', 'trace'],
+                    'logTable' => '{{%system_log}}',
+                ],
+            ],
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

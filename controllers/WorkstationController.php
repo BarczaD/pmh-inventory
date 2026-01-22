@@ -2,28 +2,41 @@
 
 namespace app\controllers;
 
+use app\models\Log;
 use app\models\Maintenance;
 use app\models\Workstation;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\db\QueryInterface;
+use yii\web\NotFoundHttpException;
 
-class WorkstationController extends Controller implements QueryInterface
+class WorkstationController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
+
     public function actionCreate()
     {
         $model = new Workstation();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->uploaded_by = Yii::$app->user->id;
-            date_default_timezone_set('Europe/Budapest');
-            $model->upload_date = date("Y-m-d h:i:s");
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Munkaállomás ({$model->hostname}) sikeresen létrehozva.");
+            return $this->redirect(['update', 'id' => $model->id]);
         }
 
-        return $this->render('new-workstation', [
+        return $this->render('create', [
             'model' => $model,
         ]);
     }
@@ -35,119 +48,48 @@ class WorkstationController extends Controller implements QueryInterface
 
     public function actionUpdate($id)
     {
-        $model = Workstation::findIdentity($id);
-
-        if (!$model) {
-            Yii::$app->session->setFlash('error', 'Munkaállomás nem található.');
-            return $this->redirect(["site/manage-data"]);
-        }
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Munkaállomás sikeresen frissítve.');
-            return $this->redirect(["site/manage-data"]);
+            return $this->redirect(['site/manage-data']);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
 
+    /**
+     * Finds the Workstation model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id
+     * @return Workstation the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Workstation::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('A keresett munkaállomás nem található.');
     }
 
     public function actionDelete($id)
     {
-        $model = Workstation::findOne($id);
+        $model = $this->findModel($id);
 
-        if ($model !== null) {
-            $model->delete();
-            Yii::$app->session->setFlash('success', 'A munkaállomás sikeresen törölve.');
-        } else {
-            Yii::$app->session->setFlash('error', 'A munkaállomás nem található.');
-        }
+        LogController::logThis();
+        // 2. (Optional) Log the event before deleting, since you have a Log system now
+        // Yii::info("Workstation {$model->hostname} deleted by " . Yii::$app->user->identity->username, 'audit');
+        $model->delete();
+
+        Yii::$app->session->setFlash('success', 'A munkaállomás sikeresen törölve.');
 
         return $this->redirect(['site/manage-data']);
     }
 
-
-
-    public function all($db = null)
-    {
-        // TODO: Implement all() method.
-    }
-
-    public function one($db = null)
-    {
-        // TODO: Implement one() method.
-    }
-
-    public function count($q = '*', $db = null)
-    {
-        // TODO: Implement count() method.
-    }
-
-    public function exists($db = null)
-    {
-        // TODO: Implement exists() method.
-    }
-
-    public function indexBy($column)
-    {
-        // TODO: Implement indexBy() method.
-    }
-
-    public function where($condition)
-    {
-        // TODO: Implement where() method.
-    }
-
-    public function andWhere($condition)
-    {
-        // TODO: Implement andWhere() method.
-    }
-
-    public function orWhere($condition)
-    {
-        // TODO: Implement orWhere() method.
-    }
-
-    public function filterWhere(array $condition)
-    {
-        // TODO: Implement filterWhere() method.
-    }
-
-    public function andFilterWhere(array $condition)
-    {
-        // TODO: Implement andFilterWhere() method.
-    }
-
-    public function orFilterWhere(array $condition)
-    {
-        // TODO: Implement orFilterWhere() method.
-    }
-
-    public function orderBy($columns)
-    {
-        // TODO: Implement orderBy() method.
-    }
-
-    public function addOrderBy($columns)
-    {
-        // TODO: Implement addOrderBy() method.
-    }
-
-    public function limit($limit)
-    {
-        // TODO: Implement limit() method.
-    }
-
-    public function offset($offset)
-    {
-        // TODO: Implement offset() method.
-    }
-
-    public function emulateExecution($value = true)
-    {
-        // TODO: Implement emulateExecution() method.
-    }
 
     public function actionNetworkStatus()
     {

@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\models\User;
-use yii\base\Controller;
+use Yii;
+use yii\db\QueryInterface;
+use yii\web\Controller;
 
 class UserController extends Controller
 {
@@ -17,8 +19,10 @@ class UserController extends Controller
         return User::getAllUsers();
     }
 
-    public static function deactivateUser($id)
+    public static function changeUserState($id)
     {
         $user = User::findIdentity($id);
+        $user->changeUserState();
+        return true;
     }
 }

@@ -5,41 +5,59 @@ namespace app\controllers;
 use Yii;
 use app\models\Cpu;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\web\Response;
 
 class CpuController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'], // Security: prevent deletion via URL
+                ],
+            ],
+        ];
+    }
+
     public function actionCreate()
     {
         $model = new Cpu();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->uploaded_by = Yii::$app->user->id;
-            date_default_timezone_set('Europe/Budapest');
-            $model->upload_date = date("Y-m-d h:i:s");
-            $model->save();
-            return 'success';
-
-        }
-
-        return $this->renderAjax('_cpuForm', ['model' => $model]);
-    }
-
-    public static function getCpus()
-    {
-        return Cpu::getCpus();
-    }
-
-    public function actionDelete($id) {
-        try {
-            if (Cpu::deleteCpu($id)) {
-                Yii::$app->session->setFlash('success', 'CPU sikeresen törölve.');
-            } else {
-                Yii::$app->session->setFlash('error', 'CPU nem található.');
+            if ($model->save()) {
+                // If it's an AJAX request (modal), return success state
+                return 'success';
             }
-        } catch (\Throwable $th) {
-            Yii::$app->session->setFlash('error', 'A CPU törlése közben hiba lépett fel:<br>' . $th->getMessage());
         }
 
-        $this->redirect(["site/manage-data"]);
+        // renderAjax is perfect for modals
+        return $this->renderAjax('_cpuForm', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            Yii::$app->session->setFlash('success', 'CPU sikeresen törölve.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Hiba történt a törlés során.');
+        }
+
+        return $this->redirect(["site/manage-data"]);
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = Cpu::findOne($id)) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException('A kért CPU nem található.');
     }
 }

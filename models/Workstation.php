@@ -21,10 +21,9 @@ class Workstation extends ActiveRecord implements IdentityInterface
     {
         return [
             [['hostname', 'brand_id', 'cpu_id', 'ram', 'os'], 'required'],
-            [['brand_id', 'cpu_id', 'colleague_id', 'office_id', 'monitor_id1', 'monitor_id2'], 'integer'],
-            [['software_list', 'description', 'anydesk_code', 'bitlocker_code'], 'string'],
-            [['ms_office_license'], 'string'],
-            [['hostname', 'os'], 'string', 'max' => 255],
+            [['brand_id', 'cpu_id', 'colleague_id', 'monitor_id1', 'monitor_id2'], 'integer'],
+            [['description', 'software_list', 'bitlocker_code', 'ms_office_license', 'hostname', 'os'], 'string'],
+            [['monitor_id1', 'monitor_id2', 'description', 'colleague_id'], 'default', 'value' => null],
         ];
     }
 
@@ -103,42 +102,20 @@ class Workstation extends ActiveRecord implements IdentityInterface
         }
     }
 
-    public function processPost($post)
+    public function beforeSave($insert)
     {
-        try {
-            $post = $post['Workstation'];
-
-            $this->hostname = $post['hostname'];
-            $this->brand_id = intval($post['brand_id']);
-            $this->cpu_id = intval($post['cpu_id']);
-            $this->ram = intval($post['ram']);
-            $this->os = $post['os'];
-            $this->colleague_id = intval($post['colleague_id']);
-            $this->monitor_id1 = $post['monitor_id1'] != "" ? intval($post['monitor_id1']) : null;
-            $this->monitor_id2 = $post['monitor_id2'] != "" ? intval($post['monitor_id2']) : null;
-            $this->bitlocker_code = $post['bitlocker_code'];
-            $this->ms_office_license = $post['ms_office_license'];
-            $this->software_list = $post['software_list'];
-            $this->description = $post['description'] != "" ? $post['description'] : null;
-
-            return true;
-        } catch (\Exception $ex) {
-            echo($ex->getMessage());
+        if (!parent::beforeSave($insert)) {
             return false;
         }
-    }
 
-    public function save($runValidation = true, $attributeNames = null)
-    {
+        // Only run this on new records (Create)
         if ($this->isNewRecord) {
-            return parent::save($runValidation, $attributeNames);
+            $this->uploaded_by = Yii::$app->user->id;
+            // Use standard DB format. Timezone should be set in config/web.php, not here!
+            $this->upload_date = date('Y-m-d H:i:s');
         }
 
-        if ($runValidation && !$this->validate($attributeNames)) {
-            return false;
-        }
-
-        return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
+        return true;
     }
 
 }
