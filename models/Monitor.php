@@ -88,4 +88,35 @@ class Monitor extends ActiveRecord implements IdentityInterface
         return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $log = new \app\models\Log();
+        $log->alert_level = 1;
+        $log->event_type = $insert ? LogEvent::MONITOR_CREATE : LogEvent::MONITOR_UPDATE;
+        $log->event_description = ($insert ? "Monitor létrehozva: " : "Monitor módosítva: {$this->brand} {$this->model}");
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+        $log->log_date = date('Y-m-d H:i:s');
+
+        if (!$log->save()) {
+            throw new \yii\db\Exception("Log mentése sikertelen: " . json_encode($log->errors));
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $log = new \app\models\Log();
+        $log->alert_level = 2;
+        $log->event_type = LogEvent::MONITOR_DELETE;
+        $log->event_description = "Monitor törölve: {$this->brand} {$this->model}";
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+
+        if (!$log->save(false)) {
+            throw new \yii\db\Exception("Törlési log mentése sikertelen.");
+        }
+    }
+
 }

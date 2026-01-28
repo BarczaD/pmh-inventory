@@ -6,7 +6,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
-class Brand extends ActiveRecord implements IdentityInterface
+class Brand extends ActiveRecord
 {
     public static function tableName()
     {
@@ -25,6 +25,37 @@ class Brand extends ActiveRecord implements IdentityInterface
             [['name'], 'required'],
             [['name'], 'string', 'max' => 255],
         ];
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $log = new \app\models\Log();
+        $log->alert_level = 1;
+        $log->event_type = $insert ? LogEvent::BRAND_CREATE : LogEvent::BRAND_UPDATE;
+        $log->event_description = ($insert ? "Brand létrehozva: " : "Brand módosítva: ") . $this->name;
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+        $log->log_date = date('Y-m-d H:i:s');
+
+        if (!$log->save()) {
+            throw new \yii\db\Exception("Log mentése sikertelen: " . json_encode($log->errors));
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $log = new \app\models\Log();
+        $log->alert_level = 2;
+        $log->event_type = LogEvent::BRAND_DELETE;
+        $log->event_description = "Brand törölve: " . $this->name;
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+
+        if (!$log->save(false)) {
+            throw new \yii\db\Exception("Törlési log mentése sikertelen.");
+        }
     }
 
     public static function findIdentity($id)

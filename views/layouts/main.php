@@ -47,6 +47,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         $navbarItems[] = ['label' => 'Új Munkaállomás', 'url' => ['/site/new-workstation']];
         $navbarItems[] = ['label' => 'Új Karbantartás', 'url' => ['/site/new-maintenance']];
         $navbarItems[] = ['label' => 'Adatok Kezelése', 'url' => ['/site/manage-data']];
+        $navbarItems[] = ['label' => 'Logok', 'url' => ['/site/log']];
         $navbarItems[] = ['label' => 'Jelszócsere', 'url' => ['/site/change-password']];
         $navbarItems[] = ['label' => 'Regisztráció', 'url' => ['/site/signup']];
         $navbarItems[] = !Yii::$app->user->isGuest

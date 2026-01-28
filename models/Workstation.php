@@ -118,4 +118,38 @@ class Workstation extends ActiveRecord implements IdentityInterface
         return true;
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $log = new \app\models\Log();
+        $log->alert_level = 1;
+        $log->event_type = $insert ? LogEvent::WORKSTATION_CREATE : LogEvent::WORKSTATION_UPDATE;
+        $log->event_description = ($insert ? "Új munkaállomás: " : "Munkaállomás módosítva: ") . "{$this->hostname}";
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+        $log->log_date = date('Y-m-d H:i:s');
+
+        if (!$log->save()) {
+            throw new \yii\db\Exception("Log mentése sikertelen: " . json_encode($log->errors));
+        }
+    }
+
+    /**
+     * Handles Logging for Deletion
+     */
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $log = new \app\models\Log();
+        $log->alert_level = 2;
+        $log->event_type = LogEvent::WORKSTATION_DELETE;
+        $log->event_description = "Munkállomás törölve: {$this->hostname}";
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+
+        if (!$log->save(false)) {
+            throw new \yii\db\Exception("Törlési log mentése sikertelen.");
+        }
+    }
+
 }

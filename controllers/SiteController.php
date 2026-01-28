@@ -6,6 +6,7 @@ use app\models\forms\ContactForm;
 use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
 use app\models\forms\WorkstationForm;
+use app\models\Log;
 use app\models\Maintenance;
 use app\models\forms\PasswordChangeForm;
 use app\models\User;
@@ -16,6 +17,11 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
+use app\models\Cpu;
+use app\models\Monitor;
+use app\models\Office;
+use app\models\Colleague;
+use app\models\Brand;
 
 class SiteController extends Controller
 {
@@ -172,81 +178,69 @@ class SiteController extends Controller
 
     public function actionManageData()
     {
+        // 1. Capture search parameters
+        $hostname = Yii::$app->request->get('hostname');
+        $colleagueName = Yii::$app->request->get('searchColleague');
+        $searchOffice = Yii::$app->request->get('searchOffice');
 
-        $hostname = null;
-        $colleagueName = null;
-        $searchOffice = null;
+        // 2. Build Workstation Query with relations
+        $workstationQuery = Workstation::find()->joinWith(['colleague', 'office']);
 
-        if (Yii::$app->request->get('hostname') || Yii::$app->request->get('searchColleague') || Yii::$app->request->get('searchOffice')) {
-            $hostname = Yii::$app->request->get('hostname');
-            $colleagueName = Yii::$app->request->get('searchColleague');
-            $searchOffice = Yii::$app->request->get('searchOffice');
+        // andFilterWhere is "smart": it only adds the condition if the value is not empty
+        $workstationQuery->andFilterWhere(['like', 'workstation.hostname', $hostname])
+            ->andFilterWhere(['like', 'colleague.name', $colleagueName])
+            ->andFilterWhere(['like', 'office.name', $searchOffice]);
 
-            $query = Workstation::find()->joinWith('colleague')->joinWith('office');
+        $workstationProvider = new ActiveDataProvider([
+            'query' => $workstationQuery,
+            'pagination' => false, // Set to false to show all as per your '[]' intent
+            'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
+        ]);
 
-            if ($hostname) {
-                $query->andFilterWhere(['like', 'hostname', $hostname]);
-            }
-
-            if ($colleagueName) {
-                $query->andFilterWhere(['like', 'colleague.name', $colleagueName]);
-            }
-
-            if ($searchOffice) {
-                $query->andFilterWhere(['like', 'office.name', $searchOffice]);
-            }
-
-            $workstationProvider = new ActiveDataProvider([
-                'query' => $query,
-                'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
-            ]);
-        } else {
-            $workstationProvider = new ActiveDataProvider([
-                'query' => WorkstationController::getWorkstations(),
-                'pagination' => [],
-                'sort' => ['defaultOrder' => ['hostname' => SORT_ASC]],
-            ]);
-        }
+        // 3. Initialize other Providers directly from Models
+        // This fixes the "Undefined method ...Controller::get..." errors
 
         $cpuProvider = new ActiveDataProvider([
-           'query' => CpuController::getCpus(),
-           'pagination' => [],
-           'sort' => ['defaultOrder' => ['brand' => SORT_ASC, 'model' => SORT_ASC]],
+            'query' => Cpu::find(),
+            'pagination' => false,
+            'sort' => ['defaultOrder' => ['brand' => SORT_ASC, 'model' => SORT_ASC]],
         ]);
 
         $monitorProvider = new ActiveDataProvider([
-            'query' => MonitorController::getMonitors(),
-            'pagination' => [],
+            'query' => Monitor::find(),
+            'pagination' => false,
             'sort' => ['defaultOrder' => ['brand' => SORT_ASC, 'model' => SORT_ASC]],
         ]);
 
         $officeProvider = new ActiveDataProvider([
-           'query' => OfficeController::getOffices(),
-           'pagination' => [],
-           'sort' => ['defaultOrder' => ['name' => SORT_ASC]],
+            'query' => Office::find(),
+            'pagination' => false,
+            'sort' => ['defaultOrder' => ['name' => SORT_ASC]],
         ]);
+
         $colleagueProvider = new ActiveDataProvider([
-            'query' => ColleagueController::getColleagues(),
-            'pagination' => [],
+            'query' => Colleague::find(),
+            'pagination' => false,
             'sort' => ['defaultOrder' => ['archived' => SORT_ASC, 'name' => SORT_ASC]],
         ]);
 
         $brandProvider = new ActiveDataProvider([
-            'query' => BrandController::getBrands(),
-            'pagination' => [],
+            'query' => Brand::find(),
+            'pagination' => false,
             'sort' => ['defaultOrder' => ['name' => SORT_ASC]],
         ]);
 
+        // 4. Render view with all providers and search terms
         return $this->render('manage-data', [
             'workstationProvider' => $workstationProvider,
-            'cpuProvider' => $cpuProvider,
-            'monitorProvider' => $monitorProvider,
-            'officeProvider' => $officeProvider,
-            'colleagueProvider' => $colleagueProvider,
-            'brandProvider' => $brandProvider,
-            'searchHostname' => $hostname,
-            'searchColleague' => $colleagueName,
-            'searchOffice' => $searchOffice,
+            'cpuProvider'         => $cpuProvider,
+            'monitorProvider'     => $monitorProvider,
+            'officeProvider'      => $officeProvider,
+            'colleagueProvider'   => $colleagueProvider,
+            'brandProvider'       => $brandProvider,
+            'searchHostname'      => $hostname,
+            'searchColleague'     => $colleagueName,
+            'searchOffice'        => $searchOffice,
         ]);
     }
 
@@ -268,6 +262,41 @@ class SiteController extends Controller
 
         return $this->render('change-password', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionLog()
+    {
+        $searchDescription = Yii::$app->request->get('event_description', '');
+        $searchDate = Yii::$app->request->get('log_date', '');
+        $searchUser = Yii::$app->request->get('triggered_by', '');
+
+        $query = \app\models\Log::find()->joinWith('user');
+
+        if ($searchDescription !== '') {
+            $query->andWhere(['like', 'event_description', $searchDescription]);
+        }
+
+        // The HTML5 date input returns YYYY-MM-DD
+        if ($searchDate !== '') {
+            $query->andWhere(['like', 'log_date', $searchDate]);
+        }
+
+        if ($searchUser !== '') {
+            $query->andWhere(['triggered_by' => $searchUser]);
+        }
+
+        $dataProvider = new \yii\data\ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 50],
+            'sort' => ['defaultOrder' => ['log_date' => SORT_DESC]],
+        ]);
+
+        return $this->render('logs', [
+            'dataProvider' => $dataProvider,
+            'searchDescription' => $searchDescription,
+            'searchDate' => $searchDate,
+            'searchUser' => $searchUser,
         ]);
     }
 }

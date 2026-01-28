@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Brand;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 class BrandController extends Controller
 {
@@ -18,11 +20,20 @@ class BrandController extends Controller
         $model = new Brand();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->uploaded_by = Yii::$app->user->id;
-            date_default_timezone_set('Europe/Budapest');
-            $model->upload_date = date("Y-m-d h:i:s");
-            $model->save();
-            return 'success';
+            try {
+                // Transaction handles both the Brand save AND the Log save inside afterSave()
+                $success = Yii::$app->db->transaction(function() use ($model) {
+                    return $model->save();
+                });
+
+                if ($success) {
+                    Yii::$app->session->setFlash('success', "Sikeres mentés.");
+                    return 'success';
+                }
+            } catch (\Exception $e) {
+                // If the log fails or the brand fails, we end up here
+                Yii::$app->session->setFlash('error', "Hiba: " . $e->getMessage());
+            }
         }
 
         return $this->renderAjax('_brandForm', ['model' => $model]);
@@ -30,16 +41,42 @@ class BrandController extends Controller
 
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+
         try {
-            if (Brand::deleteBrand($id)) {
-                Yii::$app->session->setFlash('success', 'Brand sikeresen törölve.');
-            } else {
-                Yii::$app->session->setFlash('error', 'CPU nem található.');
-            }
-        } catch (\Throwable $th) {
-            Yii::$app->session->setFlash('error', 'A brand törlése közben hiba lépett fel:<br>' . $th->getMessage());
+            Yii::$app->db->transaction(function() use ($model) {
+                if (!$model->delete()) {
+                    throw new \Exception('Nem törölhető.');
+                }
+            });
+            Yii::$app->session->setFlash('success', "Brand törölve.");
+        } catch (\Exception $e) {
+            Yii::$app->session->setFlash('error', "Sikertelen törlés: " . $e->getMessage());
         }
 
-        $this->redirect(["site/manage-data"]);
+        return $this->redirect(Yii::$app->request->referrer ?: ['index']);
+    }
+
+    protected function findModel($id)
+    {
+        if (($model = Brand::findOne($id)) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException('A keresett Brand nem található.');
+    }
+
+    public function actionIndex()
+    {
+        $brandProvider = new ActiveDataProvider([
+            'query' => Brand::find(),
+            'pagination' => ['pageSize' => 20],
+            'sort' => [
+                'defaultOrder' => ['name' => SORT_ASC]
+            ],
+        ]);
+
+        return $this->render('index', [
+            'brandProvider' => $brandProvider,
+        ]);
     }
 }

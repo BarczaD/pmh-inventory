@@ -40,7 +40,7 @@ $config = [
                 [
                     'class' => 'yii\log\DbTarget',
                     'levels' => ['error', 'warning', 'info', 'trace'],
-                    'logTable' => '{{%system_log}}',
+                    'logTable' => '{{%log}}',
                 ],
             ],
         ],

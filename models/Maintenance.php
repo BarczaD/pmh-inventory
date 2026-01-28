@@ -115,4 +115,35 @@ class Maintenance extends ActiveRecord implements IdentityInterface
 
         return (bool)$this->updateAttributes($this->getDirtyAttributes($attributeNames));
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $log = new \app\models\Log();
+        $log->alert_level = 1;
+        $log->event_type = $insert ? LogEvent::MAINTENANCE_CREATE : LogEvent::MAINTENANCE_UPDATE;
+        $log->event_description = ($insert ? "Karbantartás létrehozva: " : "Karbantartás módosítva: ") . Workstation::findIdentity($this->workstation_id)->hostname;
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+        $log->log_date = date('Y-m-d H:i:s');
+
+        if (!$log->save()) {
+            throw new \yii\db\Exception("Log mentése sikertelen: " . json_encode($log->errors));
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $log = new \app\models\Log();
+        $log->alert_level = 2;
+        $log->event_type = LogEvent::MAINTENANCE_DELETE;
+        $log->event_description = "Karbantartás törölve: " . Workstation::findIdentity($this->workstation_id)->hostname;
+        $log->triggered_by = Yii::$app->user->id ?? 0;
+
+        if (!$log->save(false)) {
+            throw new \yii\db\Exception("Törlési log mentése sikertelen.");
+        }
+    }
 }
