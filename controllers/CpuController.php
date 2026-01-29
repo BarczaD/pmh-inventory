@@ -36,8 +36,15 @@ class CpuController extends Controller
                 });
 
                 if ($success) {
-                    Yii::$app->session->setFlash('success', "Processzor rögzítve: <b>{$model->brand} {$model->model}</b>");
-                    return 'success';
+                    if (Yii::$app->request->isAjax) {
+                        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                        return [
+                            'status' => 'success',
+                            'id' => $model->id,
+                            'name' => "{$model->brand} {$model->model}"
+                        ];
+                    }
+                    return $this->redirect(['index']);
                 }
             } catch (\Exception $e) {
                 Yii::$app->session->setFlash('error', "Hiba a mentés során: " . $e->getMessage());

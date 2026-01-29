@@ -19,21 +19,16 @@ class BrandController extends Controller
     {
         $model = new Brand();
 
-        if ($model->load(Yii::$app->request->post())) {
-            try {
-                // Transaction handles both the Brand save AND the Log save inside afterSave()
-                $success = Yii::$app->db->transaction(function() use ($model) {
-                    return $model->save();
-                });
-
-                if ($success) {
-                    Yii::$app->session->setFlash('success', "Sikeres mentés.");
-                    return 'success';
-                }
-            } catch (\Exception $e) {
-                // If the log fails or the brand fails, we end up here
-                Yii::$app->session->setFlash('error', "Hiba: " . $e->getMessage());
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return [
+                    'status' => 'success',
+                    'id' => $model->id,
+                    'name' => $model->name
+                ];
             }
+            return $this->redirect(['index']);
         }
 
         return $this->renderAjax('_brandForm', ['model' => $model]);

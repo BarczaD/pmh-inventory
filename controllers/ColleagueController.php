@@ -18,12 +18,16 @@ class ColleagueController extends Controller implements QueryInterface
     {
         $model = new Colleague();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->uploaded_by = Yii::$app->user->id;
-            date_default_timezone_set('Europe/Budapest');
-            $model->upload_date = date("Y-m-d h:i:s");
-            $model->save();
-            return 'success';
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return [
+                    'status' => 'success',
+                    'id' => $model->id,
+                    'name' => $model->name
+                ];
+            }
+            return $this->redirect(['index']);
         }
 
         return $this->renderAjax('_colleagueForm', ['model' => $model]);

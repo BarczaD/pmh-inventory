@@ -36,36 +36,37 @@ class ModularModal extends Widget
 $(document).on('click', '[data-toggle="universal-modal"]', function (e) {
     e.preventDefault();
     const url = $(this).attr('href');
+    const target = $(this).data('target'); // Save which dropdown we are targeting
     const modal = $('#{$this->id}');
-    const content = $('#{$this->contentId}');
     
+    modal.data('target-select', target); // Store it in the modal's data
     modal.modal('show');
-    content.html('<div class="text-center p-5">Loading...</div>');
-    content.load(url);
+    $('#{$this->contentId}').load(url);
 });
 
-$(document).on('beforeSubmit', 'form#modal-form', function (e) {
-    e.preventDefault();
+$(document).on('beforeSubmit', 'form', function (e) {
     var form = $(this);
-    if (form.data('submitted')) return false;
-    form.data('submitted', true);
+    // Only intercept if inside our modal
+    if (form.closest('#{$this->contentId}').length === 0) return true;
 
+    e.preventDefault();
     $.post(form.attr('action'), form.serialize())
         .done(function (response) {
-            if (response === 'success') {
-                $('#universal-modal').modal('hide');
-                location.reload();
+            if (response.status === 'success') {
+                const modal = $('#{$this->id}');
+                const targetSelectId = modal.data('target-select');
+                
+                if (targetSelectId) {
+                    // 1. Add the new option to the dropdown
+                    const newOption = new Option(response.name, response.id, true, true);
+                    $('#' + targetSelectId).append(newOption).trigger('change');
+                }
+                
+                modal.modal('hide');
             } else {
-                $('#universal-modal-content').html(response);
+                $('#{$this->contentId}').html(response);
             }
-        })
-        .fail(function () {
-            alert('Hiba lépett a modal megjelenítése közben.');
-        })
-        .always(function () {
-            form.data('submitted', false);
         });
-
     return false;
 });
 JS;

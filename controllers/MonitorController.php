@@ -13,12 +13,17 @@ class MonitorController extends Controller implements QueryInterface
     {
         $model = new Monitor();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->uploaded_by = Yii::$app->user->id;
-            date_default_timezone_set('Europe/Budapest');
-            $model->upload_date = date("Y-m-d h:i:s");
-            $model->save();
-            return 'success';
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (Yii::$app->request->isAjax) {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return [
+                    'status' => 'success',
+                    'id' => $model->id,
+                    // Matches the display format you used in your Workstation form
+                    'name' => "{$model->brand} {$model->model} (S/N: {$model->s_n})"
+                ];
+            }
+            return $this->redirect(['index']);
         }
 
         return $this->renderAjax('_monitorForm', ['model' => $model]);

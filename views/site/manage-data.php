@@ -93,33 +93,29 @@ $this->title = 'Adatok Kezelése';
                     'value' => fn($model) => $model->office->name ?? '-',
                 ],
                 [
-                    'label' => 'AnyDesk kód',
-                    'value' => fn($model) => $model->anydesk_code ?? '-',
+                        'attribute' => 'anydesk_code', // Adjust this to your actual DB column name
+                        'label' => 'AnyDesk kód',
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            if (!$model->anydesk_code) {
+                                return '<span class="text-muted">-</span>';
+                            }
+
+                            // Remove spaces so the AnyDesk app can read the ID correctly
+                            $cleanId = str_replace(' ', '', $model->anydesk_code);
+
+                            return Html::a(
+                                    '<i class="fas fa-external-link-alt"></i> ' . Html::encode($model->anydesk_code),
+                                    "anydesk:{$cleanId}",
+                                    [
+                                            'class' => 'btn btn-sm btn-outline-primary w-100',
+                                            'title' => 'Csatlakozás AnyDesk-kel',
+                                            'style' => 'font-family: monospace;'
+                                    ]
+                            );
+                        },
+                        'contentOptions' => ['style' => 'width: 150px; text-align: center;'],
                 ],
-                    [
-                            'attribute' => 'anydesk_code', // Adjust this to your actual DB column name
-                            'label' => 'AnyDesk kód',
-                            'format' => 'raw',
-                            'value' => function ($model) {
-                                if (!$model->anydesk_code) {
-                                    return '<span class="text-muted">-</span>';
-                                }
-
-                                // Remove spaces so the AnyDesk app can read the ID correctly
-                                $cleanId = str_replace(' ', '', $model->anydesk_code);
-
-                                return Html::a(
-                                        '<i class="fas fa-external-link-alt"></i> ' . Html::encode($model->anydesk_code),
-                                        "anydesk:{$cleanId}",
-                                        [
-                                                'class' => 'btn btn-sm btn-outline-primary w-100',
-                                                'title' => 'Csatlakozás AnyDesk-kel',
-                                                'style' => 'font-family: monospace;'
-                                        ]
-                                );
-                            },
-                            'contentOptions' => ['style' => 'width: 150px; text-align: center;'],
-                    ],
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'template' => '{update}',

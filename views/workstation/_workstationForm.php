@@ -47,6 +47,7 @@ echo ModularModal::widget();
                     <?= Html::a('+', ['brand/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
+                        'data-target' => 'workstation-brand_id',
                         'title' => 'Új Brand hozzáadása',
                     ]) ?>
                 </div>
@@ -69,6 +70,7 @@ echo ModularModal::widget();
                     ) ?>
                     <?= Html::a('+', ['cpu/create'], [
                         'class' => 'btn btn-primary',
+                        'data-target' => 'workstation-cpu_id',
                         'data-toggle' => 'universal-modal',
                         'title' => 'Új CPU hozzáadása',
                     ]) ?>
@@ -96,6 +98,7 @@ echo ModularModal::widget();
                     <?= Html::a('+', ['colleague/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
+                        'data-target' => 'workstation-colleague_id',
                         'title' => 'Új Kolléga hozzáadása',
                     ]) ?>
                 </div>
@@ -114,6 +117,7 @@ echo ModularModal::widget();
                     <?= Html::a('+', ['office/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
+                        'data-target' => 'workstation-office_id',
                         'title' => 'Új Kolléga hozzáadása',
                     ]) ?>
                 </div>
@@ -136,6 +140,7 @@ echo ModularModal::widget();
                     <?= Html::a('+', ['monitor/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
+                        'data-target' => 'workstation-monitor_id1',
                         'title' => 'Új Monitor hozzáadása',
                     ]) ?>
                 </div>
@@ -160,6 +165,7 @@ echo ModularModal::widget();
                     <?= Html::a('+', ['monitor/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
+                        'data-target' => 'workstation-monitor_id2',
                         'title' => 'Új Monitor hozzáadása',
                     ]) ?>
                 </div>
