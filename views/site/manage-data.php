@@ -93,27 +93,33 @@ $this->title = 'Adatok Kezelése';
                     'value' => fn($model) => $model->office->name ?? '-',
                 ],
                 [
-                    'label' => 'Monitor 1',
-                    'value' => function ($model) {
-                        $monitor = Monitor::findIdentity($model->monitor_id1);
-                        return $monitor
-                            ? "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})"
-                            : '-';
-                    },
-                ],
-                [
-                    'label' => 'Monitor 2',
-                    'value' => function ($model) {
-                        $monitor = Monitor::findIdentity($model->monitor_id2);
-                        return $monitor
-                            ? "{$monitor->brand} {$monitor->model} (S/N: {$monitor->s_n})"
-                            : '-';
-                    },
-                ],
-                [
                     'label' => 'AnyDesk kód',
                     'value' => fn($model) => $model->anydesk_code ?? '-',
                 ],
+                    [
+                            'attribute' => 'anydesk_code', // Adjust this to your actual DB column name
+                            'label' => 'AnyDesk kód',
+                            'format' => 'raw',
+                            'value' => function ($model) {
+                                if (!$model->anydesk_code) {
+                                    return '<span class="text-muted">-</span>';
+                                }
+
+                                // Remove spaces so the AnyDesk app can read the ID correctly
+                                $cleanId = str_replace(' ', '', $model->anydesk_code);
+
+                                return Html::a(
+                                        '<i class="fas fa-external-link-alt"></i> ' . Html::encode($model->anydesk_code),
+                                        "anydesk:{$cleanId}",
+                                        [
+                                                'class' => 'btn btn-sm btn-outline-primary w-100',
+                                                'title' => 'Csatlakozás AnyDesk-kel',
+                                                'style' => 'font-family: monospace;'
+                                        ]
+                                );
+                            },
+                            'contentOptions' => ['style' => 'width: 150px; text-align: center;'],
+                    ],
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'template' => '{update}',

@@ -33,8 +33,15 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+                // Add 'error' to the 'only' array so it is governed by these rules
+                'only' => ['logout', 'error'],
                 'rules' => [
+                    [
+                        // This rule allows ANYONE (guests and logged-in users)
+                        // to see the error page without a DB-reliant permission check.
+                        'actions' => ['error'],
+                        'allow' => true,
+                    ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
@@ -298,5 +305,28 @@ class SiteController extends Controller
             'searchDate' => $searchDate,
             'searchUser' => $searchUser,
         ]);
+    }
+
+    public function actionError()
+    {
+        // Disabling the layout prevents the app from trying to
+        // render menus/user names that might hit the DB.
+        $this->layout = false;
+
+        $exception = Yii::$app->errorHandler->exception;
+
+        if ($exception !== null) {
+            // If it's a DB error, show the offline page
+            if ($exception instanceof \yii\db\Exception ||
+                $exception instanceof \PDOException) {
+
+                return $this->render('db-offline', [
+                    'exception' => $exception,
+                ]);
+            }
+        }
+
+        // Default error handling for everything else (404, etc.)
+        return $this->render('error', ['exception' => $exception]);
     }
 }

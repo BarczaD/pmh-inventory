@@ -22,7 +22,7 @@ class Workstation extends ActiveRecord implements IdentityInterface
         return [
             [['hostname', 'brand_id', 'cpu_id', 'ram', 'os'], 'required'],
             [['brand_id', 'cpu_id', 'colleague_id', 'monitor_id1', 'monitor_id2'], 'integer'],
-            [['description', 'software_list', 'bitlocker_code', 'ms_office_license', 'hostname', 'os'], 'string'],
+            [['description', 'software_list', 'bitlocker_code', 'ms_office_license', 'hostname', 'os', 'anydesk_code'], 'string'],
             [['monitor_id1', 'monitor_id2', 'description', 'colleague_id'], 'default', 'value' => null],
         ];
     }
