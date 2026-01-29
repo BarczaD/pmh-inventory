@@ -3,7 +3,7 @@
 $config = [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost:3306;dbname=pmh-inventory',
-    'username' => 'root',
+    'username' => 'info',
     'password' => '',
     'charset' => 'utf8',
 
