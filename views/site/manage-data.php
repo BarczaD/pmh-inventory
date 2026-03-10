@@ -93,7 +93,7 @@ $this->title = 'Adatok Kezelése';
                     'value' => fn($model) => $model->office->name ?? '-',
                 ],
                 [
-                        'attribute' => 'anydesk_code', // Adjust this to your actual DB column name
+                        'attribute' => 'anydesk_code',
                         'label' => 'AnyDesk kód',
                         'format' => 'raw',
                         'value' => function ($model) {
@@ -101,7 +101,6 @@ $this->title = 'Adatok Kezelése';
                                 return '<span class="text-muted">-</span>';
                             }
 
-                            // Remove spaces so the AnyDesk app can read the ID correctly
                             $cleanId = str_replace(' ', '', $model->anydesk_code);
 
                             return Html::a(
@@ -142,6 +141,79 @@ $this->title = 'Adatok Kezelése';
 
 
         <div class="mb-3">
+            <div class="row">
+                <h5>Kollégák <?php echo Html::a('+', ['colleague/create'], [
+                            'class' => 'btn btn-primary',
+                            'data-toggle' => 'universal-modal',
+                    ]); ?></h5>
+                <?= GridView::widget([
+                        'dataProvider' => $colleagueProvider,
+                        'columns' => [
+                                [
+                                        'label' => 'Név',
+                                        'value' => fn($model) => $model->name ?? '-',
+                                ],
+                                [
+                                        'label' => 'Iroda',
+                                        'value' => fn($model) => $model->department ?? '-',
+                                ],
+                                [
+                                        'label' => 'Csoport',
+                                        'value' => fn($model) => $model->group ?? '-',
+                                ],
+                                [
+                                        'label' => 'Itt dolgozik még?',
+                                        'value' => function($model) {
+                                            if (!$model->archived) {
+                                                return 'Igen';
+                                            } else {
+                                                return "Nem";
+                                            }
+                                        }
+                                ],
+                                [
+                                        'class' => 'yii\grid\ActionColumn',
+                                        'template' => '{delete}',
+                                        'buttons' => [
+                                                'delete' => function ($url, $model) {
+                                                    return Html::a('<i class="bi bi-trash"></i>', ['colleague/delete', 'id' => $model->id], [
+                                                            'class' => 'btn btn-sm btn-outline-danger',
+                                                            'title' => 'Törlés',
+                                                            'data' => [
+                                                                    'confirm' => 'Biztosan törlöd?',
+                                                                    'method' => 'post',
+                                                                    'pjax' => '1',
+                                                            ],
+                                                    ]);
+                                                },
+                                        ],
+                                ],
+                                [
+                                        'class' => 'yii\grid\ActionColumn',
+                                        'template' => '{toggle-archive}',
+                                        'buttons' => [
+                                                'toggle-archive' => function ($url, $model) {
+                                                    $icon = $model->archived ? 'bi bi-box-arrow-in-down' : 'bi bi-box-arrow-up';
+                                                    $label = $model->archived == 1 ? 'Visszaállítás' : 'Archiválás';
+
+                                                    return Html::a(
+                                                            "<i class='$icon'></i> $label",
+                                                            ['colleague/toggle-archive', 'id' => $model->id],
+                                                            [
+                                                                    'class' => 'btn btn-sm btn-outline-secondary',
+                                                                    'title' => $label,
+                                                                    'data' => [
+                                                                            'confirm' => 'Biztosan megváltoztatod az archíválási állapotot?',
+                                                                            'method' => 'post',
+                                                                    ],
+                                                            ]
+                                                    );
+                                                },
+                                        ],
+                                ],
+                        ],
+                ]); ?>
+            </div>
             <div class="row">
                 <div class="col-md-3">
                     <h5>CPU <?php echo Html::a('+', ['cpu/create'], [
@@ -291,79 +363,7 @@ $this->title = 'Adatok Kezelése';
                     ]); ?>
                 </div>
             </div>
-            <div class="row">
-                <h5>Kollégák <?php echo Html::a('+', ['colleague/create'], [
-                            'class' => 'btn btn-primary',
-                            'data-toggle' => 'universal-modal',
-                    ]); ?></h5>
-                <?= GridView::widget([
-                    'dataProvider' => $colleagueProvider,
-                    'columns' => [
-                        [
-                            'label' => 'Név',
-                            'value' => fn($model) => $model->name ?? '-',
-                        ],
-                        [
-                            'label' => 'Iroda',
-                            'value' => fn($model) => $model->department ?? '-',
-                        ],
-                        [
-                            'label' => 'Csoport',
-                            'value' => fn($model) => $model->group ?? '-',
-                        ],
-                        [
-                            'label' => 'Itt dolgozik még?',
-                            'value' => function($model) {
-                                if (!$model->archived) {
-                                    return 'Igen';
-                                } else {
-                                    return "Nem";
-                                }
-                            }
-                        ],
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{delete}',
-                            'buttons' => [
-                                'delete' => function ($url, $model) {
-                                    return Html::a('<i class="bi bi-trash"></i>', ['colleague/delete', 'id' => $model->id], [
-                                        'class' => 'btn btn-sm btn-outline-danger',
-                                        'title' => 'Törlés',
-                                        'data' => [
-                                            'confirm' => 'Biztosan törlöd?',
-                                            'method' => 'post',
-                                            'pjax' => '1',
-                                        ],
-                                    ]);
-                                },
-                            ],
-                        ],
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{toggle-archive}',
-                            'buttons' => [
-                                'toggle-archive' => function ($url, $model) {
-                                    $icon = $model->archived ? 'bi bi-box-arrow-in-down' : 'bi bi-box-arrow-up';
-                                    $label = $model->archived == 1 ? 'Visszaállítás' : 'Archiválás';
 
-                                    return Html::a(
-                                        "<i class='$icon'></i> $label",
-                                        ['colleague/toggle-archive', 'id' => $model->id],
-                                        [
-                                            'class' => 'btn btn-sm btn-outline-secondary',
-                                            'title' => $label,
-                                            'data' => [
-                                                'confirm' => 'Biztosan megváltoztatod az archíválási állapotot?',
-                                                'method' => 'post',
-                                            ],
-                                        ]
-                                    );
-                                },
-                            ],
-                        ],
-                    ],
-                ]); ?>
-            </div>
         </div>
 
         <?php
