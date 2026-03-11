@@ -111,14 +111,14 @@ echo ModularModal::widget();
                     <?= Html::activeDropDownList(
                         $model,
                         'office_id',
-                        ArrayHelper::map(Office::find()->all(), 'id', 'name'),
+                        ArrayHelper::map(Office::find()->orderBy(['name' => SORT_ASC])->all(), 'id', 'name'),
                         ['class' => 'form-control', 'prompt' => 'Válaszd ki az Irodát...']
                     ) ?>
                     <?= Html::a('+', ['office/create'], [
                         'class' => 'btn btn-primary',
                         'data-toggle' => 'universal-modal',
                         'data-target' => 'workstation-office_id',
-                        'title' => 'Új Kolléga hozzáadása',
+                        'title' => 'Új Iroda hozzáadása',
                     ]) ?>
                 </div>
             </div>
